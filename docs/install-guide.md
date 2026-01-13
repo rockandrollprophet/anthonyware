@@ -65,8 +65,8 @@ Login as your user.
 ---
 
 ## 7. Clone Anthonyware Repo
-git clone https://github.com/<yourname>/anthonyware-arch
-cd anthonyware-arch/install
+git clone https://github.com/<yourname>/anthonyware
+cd anthonyware/install
 
 ---
 
