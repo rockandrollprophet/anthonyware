@@ -38,13 +38,17 @@ pip install \
     sentencepiece
 
 # LLM UIs (AUR)
-yay -S --noconfirm --needed \
-    text-generation-webui \
-    koboldcpp \
-    llama.cpp \
-    oobabooga
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed \
+        text-generation-webui \
+        koboldcpp \
+        llama.cpp \
+        oobabooga || echo "WARNING: Some LLM UIs failed to build via yay"
+else
+    echo "NOTICE: 'yay' not found; install LLM UI packages via AUR helper if desired"
+fi
 
 # GPU monitoring
-sudo pacman -S --noconfirm --needed nvtop
+sudo pacman -S --noconfirm --needed nvtop || echo "WARNING: nvtop install failed"
 
 echo "=== AI/ML Stack Setup Complete ==="

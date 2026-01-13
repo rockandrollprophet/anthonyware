@@ -48,13 +48,18 @@ sudo pacman -S --noconfirm --needed \
     yazi
 
 # Docker setup
+TARGET_USER="${SUDO_USER:-$USER}"
 sudo systemctl enable --now docker
-sudo usermod -aG docker "$USER"
+sudo usermod -aG docker "$TARGET_USER"
 
 # Rust toolchain
 rustup default stable
 
 # VS Code (AUR)
-yay -S --noconfirm --needed visual-studio-code-bin
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed visual-studio-code-bin || echo "WARNING: visual-studio-code-bin failed to install via yay"
+else
+    echo "NOTICE: 'yay' not found; install visual-studio-code-bin manually if desired"
+fi
 
 echo "=== Development Tools Setup Complete ==="

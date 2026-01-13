@@ -16,8 +16,12 @@ sudo pacman -S --noconfirm --needed \
 sudo pacman -S --noconfirm --needed ttf-nerd-fonts-symbols
 
 # Optional extra Nerd fonts
-yay -S --noconfirm --needed \
-    ttf-jetbrains-mono-nerd \
-    ttf-firacode-nerd
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed \
+        ttf-jetbrains-mono-nerd \
+        ttf-firacode-nerd || echo "WARNING: Some Nerd fonts failed to install via yay"
+else
+    echo "NOTICE: 'yay' not found; install Nerd fonts manually if desired"
+fi
 
 echo "=== Fonts Setup Complete ==="

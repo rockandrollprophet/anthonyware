@@ -10,7 +10,11 @@ sudo pacman -S --noconfirm --needed \
     x11-spnav \
     gtkwave
 
-yay -S --noconfirm --needed spnavcfg
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed spnavcfg || echo "WARNING: spnavcfg failed to install via yay"
+else
+    echo "NOTICE: 'yay' not found; install spnavcfg manually if desired"
+fi
 
 sudo systemctl enable --now spacenavd
 
@@ -24,11 +28,15 @@ sudo pacman -S --noconfirm --needed \
 sudo systemctl enable --now ratbagd
 
 # Alienware / Dell
-yay -S --noconfirm --needed \
-    alienfx \
-    awcc-linux \
-    dell-bios-fan-control \
-    nbfc-linux
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed \
+        alienfx \
+        awcc-linux \
+        dell-bios-fan-control \
+        nbfc-linux || echo "WARNING: Some Dell/Alienware AUR packages failed to install"
+else
+    echo "NOTICE: 'yay' not found; install Alienware/Dell packages manually if desired"
+fi
 
 # Sensors + thermal control
 sudo pacman -S --noconfirm --needed \

@@ -18,8 +18,12 @@ sudo pacman -S --noconfirm --needed \
     gnuplot \
     python-usbtmc
 
-yay -S --noconfirm --needed \
-    ltspice \
-    scpi-tools
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed \
+        ltspice \
+        scpi-tools || echo "WARNING: Some EE AUR packages failed to install"
+else
+    echo "NOTICE: 'yay' not found; install LTSpice/SCPI tools manually if desired"
+fi
 
 echo "=== Electrical Engineering Setup Complete ==="

@@ -10,7 +10,11 @@ sudo pacman -S --noconfirm --needed \
     sigrok-cli \
     pulseview
 
-yay -S --noconfirm --needed \
-    scpi-tools
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed \
+        scpi-tools || echo "WARNING: scpi-tools failed to install via yay"
+else
+    echo "NOTICE: 'yay' not found; install scpi-tools manually if desired"
+fi
 
 echo "=== Instrumentation Setup Complete ==="

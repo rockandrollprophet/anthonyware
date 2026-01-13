@@ -7,7 +7,11 @@ echo "=== [99] Update Everything ==="
 sudo pacman -Syu --noconfirm
 
 # AUR update
-yay -Syu --noconfirm
+if command -v yay >/dev/null; then
+    yay -Syu --noconfirm || echo "WARNING: 'yay' update failed"
+else
+    echo "NOTICE: 'yay' not found; skipping AUR update"
+fi
 
 # Flatpak update
 flatpak update -y || true

@@ -12,7 +12,11 @@ sudo pacman -S --noconfirm --needed \
     pavucontrol \
     helvum
 
-yay -S --noconfirm --needed qpwgraph
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed qpwgraph || echo "WARNING: qpwgraph failed to install via yay"
+else
+    echo "NOTICE: 'yay' not found; install qpwgraph manually if desired"
+fi
 
 sudo systemctl --user enable --now wireplumber
 

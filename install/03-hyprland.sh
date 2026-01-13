@@ -3,6 +3,22 @@ set -euo pipefail
 
 echo "=== [03] Hyprland Desktop Setup ==="
 
+TARGET_USER="${SUDO_USER:-$USER}"
+TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
+
+if [ "$TARGET_USER" = "root" ]; then
+    echo "ERROR: Do not run this script as pure root."
+    exit 1
+fi
+
+# Preflight checks
+for cmd in pacman mkdir; do
+    if ! command -v "$cmd" >/dev/null; then
+        echo "ERROR: Required command '$cmd' missing."
+        exit 1
+    fi
+done
+
 # Core Hyprland packages
 sudo pacman -S --noconfirm --needed \
     hyprland \
@@ -23,23 +39,29 @@ sudo pacman -S --noconfirm --needed \
     polkit-kde-agent \
     qt5-wayland \
     qt6-wayland \
-    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-hyprland || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
 
-# AUR packages
-yay -S --noconfirm --needed \
-    grimblast-git \
-    eww-wayland \
-    hyprpicker
+# AUR packages (if yay exists)
+if command -v yay >/dev/null; then
+    yay -S --noconfirm --needed \
+        grimblast-git \
+        eww-wayland \
+        hyprpicker || echo "WARNING: Some AUR packages failed to install"
+else
+    echo "NOTICE: 'yay' not found. Install AUR packages manually if desired: grimblast-git eww-wayland hyprpicker"
+fi
 
-# Create config directories
-mkdir -p ~/.config/{hypr,waybar,kitty,mako,eww,hyprpaper}
+# Create config directories using the target user's home
+mkdir -p "$TARGET_HOME/.config/hypr" "$TARGET_HOME/.config/waybar" "$TARGET_HOME/.config/kitty" "$TARGET_HOME/.config/mako" "$TARGET_HOME/.config/eww" "$TARGET_HOME/.config/hyprpaper"
 
-# Placeholder configs
-echo "# Hyprland config" > ~/.config/hypr/hyprland.conf
-echo "# Waybar config" > ~/.config/waybar/config.jsonc
-echo "# Kitty config" > ~/.config/kitty/kitty.conf
-echo "# Mako config" > ~/.config/mako/config
-echo "# Eww config" > ~/.config/eww/eww.yuck
-echo "# Hyprpaper config" > ~/.config/hypr/hyprpaper.conf
+# Placeholder configs (owned by target user)
+printf '# Hyprland config\n' | sudo tee "$TARGET_HOME/.config/hypr/hyprland.conf" >/dev/null
+printf '# Waybar config\n' | sudo tee "$TARGET_HOME/.config/waybar/config.jsonc" >/dev/null
+printf '# Kitty config\n' | sudo tee "$TARGET_HOME/.config/kitty/kitty.conf" >/dev/null
+printf '# Mako config\n' | sudo tee "$TARGET_HOME/.config/mako/config" >/dev/null
+printf '# Eww config\n' | sudo tee "$TARGET_HOME/.config/eww/eww.yuck" >/dev/null
+printf '# Hyprpaper config\n' | sudo tee "$TARGET_HOME/.config/hypr/hyprpaper.conf" >/dev/null
+
+sudo chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config" || true
 
 echo "=== Hyprland Desktop Setup Complete ==="
