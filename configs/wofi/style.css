@@ -1,0 +1,13 @@
+window {
+    background-color: rgba(0,0,0,0.85);
+}
+
+#input {
+    background-color: #000000;
+    color: #FFFFFF;
+    border: 2px solid #FF0000;
+}
+
+#entry {
+    padding: 6px;
+}

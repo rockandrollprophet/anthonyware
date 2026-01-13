@@ -1,0 +1,22 @@
+# Logs
+*.log
+anthonyware-logs/
+
+# Temporary files
+*.tmp
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Build artifacts
+build/
+dist/

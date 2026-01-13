@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Anthonyware
+Description=Anthonyware Plymouth Theme
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/anthonyware
+ScriptFile=/usr/share/plymouth/themes/anthonyware/script.js

@@ -1,0 +1,13 @@
+[general]
+bars = 20
+bar_width = 2
+bar_spacing = 1
+
+[output]
+method = raw
+raw_target = /tmp/cava.fifo
+data_format = ascii
+
+[color]
+background = 'black'
+foreground = 'red'

@@ -1,0 +1,3 @@
+(defwidget visualizer []
+  (box :class "visualizer"
+    (label :text "Audio Visualizer")))

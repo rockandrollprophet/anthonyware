@@ -1,0 +1,27 @@
+{
+  "logo": {
+    "source": "ascii-a.txt",
+    "color": {
+      "1": "red"
+    }
+  },
+  "display": {
+    "separator": " → "
+  },
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "kernel",
+    "uptime",
+    "packages",
+    "shell",
+    "terminal",
+    "cpu",
+    "gpu",
+    "memory",
+    "disk",
+    "break",
+    "colors"
+  ]
+}
