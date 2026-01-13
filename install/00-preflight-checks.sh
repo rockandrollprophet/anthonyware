@@ -5,11 +5,13 @@ echo "=== Preflight Checks ==="
 
 # Check internet
 echo -n "Checking internet connectivity... "
-ping -c 1 archlinux.org >/dev/null 2>&1 && echo "OK" || {
+if ping -c 1 archlinux.org >/dev/null 2>&1; then
+    echo "OK"
+else
     echo "FAILED"
     echo "No internet connection detected."
     exit 1
-}
+fi
 
 # Check pacman lock
 echo -n "Checking pacman lock... "
