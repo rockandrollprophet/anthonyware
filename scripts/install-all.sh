@@ -3,7 +3,7 @@ set -euo pipefail
 
 echo "=== ANTHONYWARE IDENTITY STACK INSTALLER ==="
 
-REPO="$HOME/anthonyware-arch"
+REPO="$HOME/anthonyware"
 
 # ---------------------------------------------------------
 # 0. Ensure repo exists
