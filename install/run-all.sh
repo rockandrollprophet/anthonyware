@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# SUDO-aware user/home
+TARGET_USER="${SUDO_USER:-$USER}"
+TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
+REPO="${REPO:-$TARGET_HOME/anthonyware}"
+
+if [ "$TARGET_USER" = "root" ]; then
+    echo "ERROR: Do not run this script as pure root."
+    echo "Run it as your normal user and use sudo when prompted."
+    exit 1
+fi
+
+export TARGET_USER TARGET_HOME REPO
+
 LOG_DIR="$HOME/anthonyware-logs"
 mkdir -p "$LOG_DIR"
 
