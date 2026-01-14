@@ -1,20 +1,35 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# SUDO-aware user/home
+TARGET_USER="${SUDO_USER:-$USER}"
+TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
+REPO="${REPO:-$TARGET_HOME/anthonyware}"
+
+if [ "$TARGET_USER" = "root" ]; then
+    echo "ERROR: Do not run this script as pure root."
+    echo "Run it as your normal user and use sudo when prompted."
+    exit 1
+fi
+
+export TARGET_USER TARGET_HOME REPO
+
 LOG_DIR="$HOME/anthonyware-logs"
 mkdir -p "$LOG_DIR"
 
 SCRIPTS=(
   "00-preflight-checks.sh"
   "01-base-system.sh"
-  "02-gpu-drivers.sh"
-  "03-hyprland.sh"
+  "02-qt6-runtime.sh"
+  "03-gpu-drivers.sh"
+  "04-hyprland.sh"
   "04-daily-driver.sh"
   "05-dev-tools.sh"
   "06-ai-ml.sh"
   "07-cad-cnc-3dprinting.sh"
   "08-hardware-support.sh"
   "09-security.sh"
+  "10-webcam-media.sh"
   "10-backups.sh"
   "11-vfio-windows-vm.sh"
   "12-printing.sh"
@@ -22,12 +37,14 @@ SCRIPTS=(
   "14-portals.sh"
   "15-power-management.sh"
   "16-firmware.sh"
+  "34-diagnostics.sh"
   "17-steam.sh"
   "18-networking-tools.sh"
   "19-electrical-engineering.sh"
   "20-fpga-toolchain.sh"
   "21-instrumentation.sh"
   "22-homelab-tools.sh"
+  "32-latex-docs.sh"
   "23-terminal-qol.sh"
   "24-cleanup-and-verify.sh"
   "25-color-management.sh"

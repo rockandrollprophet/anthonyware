@@ -16,7 +16,13 @@ sudo pacman -S --noconfirm --needed \
     python-seaborn \
     python-tqdm \
     python-requests \
-    python-virtualenv
+    python-virtualenv \
+    python-ipykernel \
+    python-nbformat \
+    python-nbconvert \
+    python-jupyterlab-server \
+    python-ipywidgets \
+    nvtop
 
 # PyTorch (CUDA)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
@@ -36,6 +42,18 @@ pip install \
     deepspeed \
     flash-attn \
     sentencepiece
+
+# JupyterLab tooling / LSP / Git / utility extensions
+echo "[06-ai-ml] Installing JupyterLab extensions via pip (LSP, git, tooling)..."
+
+pip install --upgrade \
+    jupyterlab-lsp \
+    python-lsp-server \
+    jupyterlab-git \
+    jupyterlab-variableinspector \
+    jupyterlab-code-formatter \
+    jupyterlab_execute_time \
+    jupyter_http_over_ws
 
 # LLM UIs (AUR)
 if command -v yay >/dev/null; then

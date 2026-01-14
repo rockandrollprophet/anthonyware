@@ -4,7 +4,13 @@ set -euo pipefail
 echo "=== [24] Cleanup & Verification ==="
 
 # Clean orphan packages
-sudo pacman -Rns --noconfirm $(pacman -Qtdq || true)
+orphans=$(pacman -Qtdq || true)
+if [ -n "$orphans" ]; then
+    read -r -a orphans_array <<< "$orphans"
+    sudo pacman -Rns --noconfirm "${orphans_array[@]}" || echo "WARNING: failed to remove some orphans"
+else
+    echo "No orphan packages to remove"
+fi
 
 # Update system one last time
 sudo pacman -Syu --noconfirm
@@ -19,6 +25,6 @@ grep -E --color=never '(vmx|svm)' /proc/cpuinfo | head
 
 # Verify Wayland
 echo "Wayland session check:"
-echo $XDG_SESSION_TYPE
+echo "$XDG_SESSION_TYPE"
 
 echo "=== Cleanup & Verification Complete ==="

@@ -20,6 +20,8 @@ sudo pacman -S --noconfirm --needed \
 atuin init zsh >> ~/.zshrc
 
 # Enable Starship prompt
+# Intentionally append the literal eval string — do not expand at write-time
+# shellcheck disable=SC2016
 echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 
 echo "=== Terminal QoL Setup Complete ==="
