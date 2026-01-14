@@ -1,43 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "=== [03] Hyprland Desktop Setup ==="
+# Legacy wrapper: the Hyprland installer moved to 04-hyprland.sh
+# This wrapper forwards to the new script to preserve numbering compatibility.
 
-TARGET_USER="${SUDO_USER:-$USER}"
-TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
-
-if [ "$TARGET_USER" = "root" ]; then
-    echo "ERROR: Do not run this script as pure root."
+SCRIPT_DIR="$(dirname "$0")"
+if [ -x "$SCRIPT_DIR/04-hyprland.sh" ]; then
+    echo "[03] Forwarding to 04-hyprland.sh"
+    bash "$SCRIPT_DIR/04-hyprland.sh"
+    exit $?
+else
+    echo "ERROR: 04-hyprland.sh not found or not executable; run 04-hyprland.sh directly." >&2
     exit 1
 fi
-
-# Preflight checks
-for cmd in pacman mkdir; do
-    if ! command -v "$cmd" >/dev/null; then
-        echo "ERROR: Required command '$cmd' missing."
-        exit 1
-    fi
-done
-
-# Core Hyprland packages
-sudo pacman -S --noconfirm --needed \
-    hyprland \
-    waybar \
-    wofi \
-    kitty \
-    mako \
-    hyprpaper \
-    hyprlock \
-    hypridle \
-    swww \
-    grim \
-    slurp \
-    swappy \
-    wl-clipboard \
-    cliphist \
-    wlogout \
-    polkit-kde-agent \
-    qt5-wayland \
     qt6-wayland \
     xdg-desktop-portal-hyprland || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
 

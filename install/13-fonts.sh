@@ -7,10 +7,12 @@ sudo pacman -S --noconfirm --needed \
     noto-fonts \
     noto-fonts-extra \
     noto-fonts-emoji \
+    noto-fonts-cjk \
     ttf-dejavu \
     ttf-liberation \
     ttf-jetbrains-mono \
-    ttf-fira-code
+    ttf-fira-code \
+    papirus-icon-theme
 
 # Nerd symbols font (for prompts, icons)
 sudo pacman -S --noconfirm --needed ttf-nerd-fonts-symbols
