@@ -1,0 +1,19 @@
+{
+  "control": [
+    {
+      "VTOY_DEFAULT_MENU_MODE": "1"
+    }
+  ],
+  "theme": {
+    "file": "/ventoy/theme/theme.txt",
+    "gfxmode": "1920x1080"
+  },
+  "image_list": [
+    {
+      "image": "/archlinux.iso",
+      "alias": "Arch Linux - Anthonyware Installer",
+      "tip": "Boot Arch ISO to install Anthonyware OS"
+    }
+  ],
+  "menu_tip": "Select Arch Linux to start Anthonyware installation"
+}

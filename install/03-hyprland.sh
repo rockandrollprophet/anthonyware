@@ -39,16 +39,18 @@ sudo pacman -S --noconfirm --needed \
     polkit-kde-agent \
     qt5-wayland \
     qt6-wayland \
-    xdg-desktop-portal-hyprland || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
+    xdg-desktop-portal-hyprland \
+    wlr-randr || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
 
 # AUR packages (if yay exists)
 if command -v yay >/dev/null; then
     yay -S --noconfirm --needed \
         grimblast-git \
         eww-wayland \
-        hyprpicker || echo "WARNING: Some AUR packages failed to install"
+        hyprpicker \
+        wdisplays || echo "WARNING: Some AUR packages failed to install"
 else
-    echo "NOTICE: 'yay' not found. Install AUR packages manually if desired: grimblast-git eww-wayland hyprpicker"
+    echo "NOTICE: 'yay' not found. Install AUR packages manually if desired: grimblast-git eww-wayland hyprpicker wdisplays"
 fi
 
 # Create config directories using the target user's home

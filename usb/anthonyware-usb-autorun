@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ============================================================
+#  anthonyware-usb-autorun
+#  USB autorun script with safety lock
+#  Scans for Anthonyware repo on USB and runs installer
+#  Requires USB_AUTORUN_ENABLED marker file to run
+# ============================================================
+
+echo "[autorun] Searching for Anthonyware USB..."
+
+for dev in /dev/sd*1; do
+    mountpoint="/run/anthonyware-usb"
+    mkdir -p "$mountpoint"
+
+    if mount "$dev" "$mountpoint" 2>/dev/null; then
+        if [[ -d "$mountpoint/anthonyware" ]]; then
+            if [[ -f "$mountpoint/anthonyware/USB_AUTORUN_ENABLED" ]]; then
+                echo "[autorun] Found armed Anthonyware repo on $dev"
+                echo "[autorun] Starting installer..."
+                cd "$mountpoint/anthonyware"
+                exec ./run-from-usb.sh
+            else
+                echo "[autorun] Repo found on $dev but NOT armed (USB_AUTORUN_ENABLED missing)."
+                echo "[autorun] To enable autorun, create: USB_AUTORUN_ENABLED"
+                umount "$mountpoint"
+            fi
+        else
+            umount "$mountpoint"
+        fi
+    fi
+done
+
+echo "[autorun] No armed Anthonyware repo found on any USB."
+echo "[autorun] Autorun disabled. Dropping to shell."
+exit 0

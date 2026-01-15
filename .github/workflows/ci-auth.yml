@@ -1,0 +1,231 @@
+name: Anthonyware CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ============================================================
+  # LINT AND SYNTAX CHECKS
+  # ============================================================
+  lint-and-syntax:
+    name: Lint and Syntax Check
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize pacman keys
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
+
+      - name: Install linting tools
+        run: |
+          pacman -Sy --noconfirm --needed shellcheck python-pip jq
+
+      - name: ShellCheck all shell scripts
+        run: |
+          find . -name "*.sh" -type f -print0 | \
+            xargs -0 -n1 shellcheck --severity=warning || true
+
+      - name: Bash syntax check
+        run: |
+          find install scripts -name "*.sh" -type f -print0 | \
+            xargs -0 -n1 bash -n
+
+      - name: Validate JSON and JSONC files
+        run: |
+          pip install jsonschema
+          find . \( -name "*.json" -o -name "*.jsonc" \) -type f | while read f; do
+            if python -m json.tool "$f" > /dev/null 2>&1; then
+              echo "✓ $f"
+            else
+              echo "✗ Invalid JSON: $f"
+              exit 1
+            fi
+          done
+
+      - name: Verify all install scripts are referenced in run-all.sh
+        run: |
+          cd install
+          MISSING=0
+          for script in *.sh; do
+            if [[ "$script" != "run-all.sh" && "$script" != "0-README.md" ]]; then
+              if ! grep -Eq "(^|/)$script" run-all.sh; then
+                echo "✗ $script not referenced in run-all.sh"
+                ((MISSING++))
+              fi
+            fi
+          done
+          if [[ $MISSING -gt 0 ]]; then
+            echo "ERROR: $MISSING scripts missing from run-all.sh"
+            exit 1
+          fi
+
+  # ============================================================
+  # ARCH DRY-RUN TEST
+  # ============================================================
+  arch-dry-run:
+    name: Arch Linux Dry-Run Test
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize pacman keys
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
+
+      - name: Install base tools
+        run: |
+          pacman -Sy --noconfirm --needed git base-devel bash jq yq sudo
+
+      - name: Create test user
+        run: |
+          useradd -m -s /bin/bash testuser || true
+          echo "testuser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/testuser
+          chmod 440 /etc/sudoers.d/testuser
+          chown -R testuser:testuser /github/workspace
+
+      - name: Run installer in dry-run mode
+        run: |
+          cd /github/workspace/install
+          sudo -u testuser bash -lc \
+            'DRY_RUN=1 TARGET_USER=testuser TARGET_HOME=/home/testuser REPO=/github/workspace ./run-all.sh' \
+            || true
+
+      - name: Verify key scripts exist
+        run: |
+          cd /github/workspace/install
+          REQUIRED=(
+            "00-preflight-checks.sh"
+            "01-base-system.sh"
+            "02-qt6-runtime.sh"
+            "03-hyprland.sh"
+            "33-user-configs.sh"
+            "35-validation.sh"
+            "99-update-everything.sh"
+          )
+          for script in "${REQUIRED[@]}"; do
+            if [[ -f "$script" ]]; then
+              echo "✓ $script"
+            else
+              echo "✗ MISSING: $script"
+              exit 1
+            fi
+          done
+
+  # ============================================================
+  # DOCUMENTATION CHECKS
+  # ============================================================
+  documentation:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install mdformat
+        run: |
+          pacman -Sy --noconfirm python-pip
+          pip install mdformat
+
+      - name: Check critical docs exist
+        run: |
+          DOCS=(
+            "README.md"
+            "QUICK_START.md"
+            "docs/install-guide.md"
+            "install/0-README.md"
+          )
+          for doc in "${DOCS[@]}"; do
+            if [[ -f "$doc" ]]; then
+              echo "✓ $doc"
+            else
+              echo "✗ MISSING: $doc"
+              exit 1
+            fi
+          done
+
+      - name: Validate Markdown formatting
+        run: |
+          mdformat --check . || true
+
+  # ============================================================
+  # PACKAGE MANIFEST CHECK
+  # ============================================================
+  package-check:
+    name: Package Manifest Validation
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate package groups
+        run: |
+          FAIL=0
+
+          check() {
+            local label="$1"
+            local file="$2"
+            local pattern="$3"
+
+            if grep -Eq "$pattern" "$file"; then
+              echo "✓ $label"
+            else
+              echo "✗ Missing: $label"
+              FAIL=1
+            fi
+          }
+
+          check "Qt6 packages" install/02-qt6-runtime.sh "qt6-base"
+          check "Jupyter packages" install/06-ai-ml.sh "python-jupyterlab|jupyterlab-lsp"
+          check "Webcam packages" install/10-webcam-media.sh "v4l-utils|ffmpeg"
+          check "LaTeX packages" install/32-latex-docs.sh "texlive-most|pandoc"
+          check "Diagnostics packages" install/34-diagnostics.sh "smartmontools|nvme-cli"
+
+          if [[ $FAIL -ne 0 ]]; then
+            echo "Package validation FAILED."
+            exit 1
+          fi
+
+  # ============================================================
+  # CI SUMMARY
+  # ============================================================
+  ci-summary:
+    name: CI Summary
+    needs: [lint-and-syntax, arch-dry-run, documentation, package-check]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Print CI results
+        run: |
+          echo "=== Anthonyware CI Complete ==="
+          echo "Lint and Syntax: ${{ needs.lint-and-syntax.result }}"
+          echo "Arch Dry-Run:    ${{ needs.arch-dry-run.result }}"
+          echo "Documentation:   ${{ needs.documentation.result }}"
+          echo "Package Check:   ${{ needs.package-check.result }}"
+
+          if [[ "${{ needs.lint-and-syntax.result }}" == "failure" ]] || \
+             [[ "${{ needs.arch-dry-run.result }}" == "failure" ]] || \
+             [[ "${{ needs.documentation.result }}" == "failure" ]] || \
+             [[ "${{ needs.package-check.result }}" == "failure" ]]; then
+            exit 1
+          fi

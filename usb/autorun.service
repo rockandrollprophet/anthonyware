@@ -1,0 +1,12 @@
+[Unit]
+Description=Anthonyware USB Autorun Installer
+After=network.target local-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/anthonyware-usb-autorun
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
