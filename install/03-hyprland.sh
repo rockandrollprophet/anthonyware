@@ -40,7 +40,20 @@ sudo pacman -S --noconfirm --needed \
     qt5-wayland \
     qt6-wayland \
     xdg-desktop-portal-hyprland \
-    wlr-randr || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
+    xdg-desktop-portal-gtk \
+    wlr-randr \
+    swaync || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
+
+# Start polkit agent for authentication dialogs
+mkdir -p "$TARGET_HOME/.config/autostart"
+cat > "$TARGET_HOME/.config/autostart/polkit-kde-agent.desktop" <<'EOF'
+[Desktop Entry]
+Type=Application
+Name=PolicyKit Authentication Agent
+Exec=/usr/lib/polkit-kde-authentication-agent-1
+Terminal=false
+X-GNOME-Autostart-enabled=true
+EOF
 
 # AUR packages (if yay exists)
 if command -v yay >/dev/null; then

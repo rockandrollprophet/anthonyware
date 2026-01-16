@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# ============================================================
+#  Anthonyware OS 1.0 — Installation Pipeline Orchestrator
+#
+#  Enhanced with:
+#    - Retry logic for network failures
+#    - Critical script validation
+#    - Checkpoint system
+#    - Enhanced logging with timestamps
+# ============================================================
+
 # Enable dry-run mode (set DRY_RUN=1 before running to skip destructive operations)
 DRY_RUN="${DRY_RUN:-0}"
 export DRY_RUN
@@ -24,6 +34,23 @@ fi
 
 LOG_DIR="${TARGET_HOME}/anthonyware-logs"
 mkdir -p "$LOG_DIR"
+
+# Checkpoint file to track progress
+CHECKPOINT_FILE="$LOG_DIR/installation-checkpoint.txt"
+touch "$CHECKPOINT_FILE"
+
+# Enhanced logging function
+log_message() {
+    local level="$1"
+    shift
+    local message="$*"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $message" | tee -a "$LOG_DIR/run-all.log"
+}
+
+log_message "INFO" "Starting Anthonyware OS installation pipeline"
+log_message "INFO" "Target User: $TARGET_USER"
+log_message "INFO" "Target Home: $TARGET_HOME"
+log_message "INFO" "Repository: $REPO_PATH"
 
 SCRIPTS=(
   "00-preflight-checks.sh"
@@ -82,16 +109,50 @@ echo
 
 for script in "${SCRIPTS[@]}"; do
     if [[ ! -f "$(dirname "$0")/$script" ]]; then
-      echo "⚠ SKIP: $script (not found)"
+      log_message "WARN" "SKIP: $script (not found)"
       continue
     fi
     
-    echo ">>> Running $script"
-    if bash "$(dirname "$0")/$script" 2>&1 | tee "$LOG_DIR/$script.log"; then
-      echo ">>> ✓ Completed $script"
-    else
-      echo ">>> ✗ FAILED: $script (see log for details)"
-      # Continue on error to gather diagnostics
+    # Check if already completed
+    if grep -q "^COMPLETED:$script$" "$CHECKPOINT_FILE" 2>/dev/null; then
+        log_message "INFO" "SKIP: $script (already completed)"
+        continue
+    fi
+    
+    log_message "INFO" "Running $script"
+    
+    # Retry logic for network-dependent scripts
+    MAX_RETRIES=3
+    RETRY_COUNT=0
+    SUCCESS=false
+    
+    while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+        if bash "$(dirname "$0")/$script" 2>&1 | tee "$LOG_DIR/$script.log"; then
+            log_message "INFO" "✓ Completed $script"
+            echo "COMPLETED:$script" >> "$CHECKPOINT_FILE"
+            SUCCESS=true
+            break
+        else
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            if [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; then
+                log_message "WARN" "Failed (attempt $RETRY_COUNT/$MAX_RETRIES), retrying in 5 seconds..."
+                sleep 5
+            fi
+        fi
+    done
+    
+    if [[ "$SUCCESS" == false ]]; then
+        log_message "ERROR" "FAILED: $script after $MAX_RETRIES attempts (see log for details)"
+        
+        # Critical scripts should halt installation
+        CRITICAL_SCRIPTS=("00-preflight-checks.sh" "01-base-system.sh" "03-hyprland.sh")
+        for critical in "${CRITICAL_SCRIPTS[@]}"; do
+            if [[ "$script" == "$critical" ]]; then
+                log_message "CRITICAL" "Cannot continue without $script"
+                log_message "INFO" "Check logs and run again: bash run-all.sh"
+                exit 1
+            fi
+        done
     fi
     echo
 done
@@ -100,4 +161,8 @@ echo "=============================================="
 echo " Installation Pipeline Complete"
 echo "=============================================="
 echo "Check logs: tail -f $LOG_DIR/*.log"
+echo "Main log: $LOG_DIR/run-all.log"
+echo "Checkpoint: $CHECKPOINT_FILE"
 echo "=============================================="
+
+log_message "INFO" "Installation pipeline completed successfully"

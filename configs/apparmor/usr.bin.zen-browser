@@ -1,0 +1,65 @@
+# AppArmor profile for Zen Browser
+# Security confinement for zen-browser process
+#
+# ============================================================
+# SECURITY DISABLED FOR DEVELOPMENT/LEARNING
+# ============================================================
+# This AppArmor profile is COMMENTED OUT to allow full system access
+# during initial setup and learning phase.
+#
+# TO ENABLE: Uncomment the profile block below
+#
+# WARNING: Zen Browser is currently UNCONFINED by AppArmor!
+# ============================================================
+
+## APPARMOR PROFILE DISABLED - UNCOMMENT TO ENABLE
+##
+## #include <tunables/global>
+##
+## /usr/bin/zen-browser {
+##   #include <abstractions/base>
+##   #include <abstractions/nameservice>
+##   #include <abstractions/openssl>
+##   #include <abstractions/fonts>
+##   #include <abstractions/freedesktop.org>
+##   #include <abstractions/user-tmp>
+##   #include <abstractions/X>
+##   #include <abstractions/wayland>
+##   
+##   # Binary execution
+##   /usr/bin/zen-browser rix,
+##   /usr/lib/zen-browser/** rix,
+##   
+##   # Configuration and data
+##   owner @{HOME}/.zen/** rw,
+##   owner @{HOME}/.cache/zen/** rw,
+##   owner @{HOME}/.local/share/zen/** rw,
+##   
+##   # Downloads
+##   owner @{HOME}/Downloads/** rw,
+##   
+##   # System resources
+##   /proc/sys/kernel/random/uuid r,
+##   /sys/devices/system/cpu/cpufreq/policy*/cpuinfo_max_freq r,
+##   /sys/devices/system/node/node*/meminfo r,
+##   /dev/dri/** rw,
+##   
+##   # Network
+##   network inet stream,
+##   network inet6 stream,
+##   network inet dgram,
+##   network inet6 dgram,
+##   
+##   # D-Bus
+##   dbus send
+##        bus=session
+##        interface=org.freedesktop.Notifications,
+##   
+##   # Deny sensitive locations
+##   deny /etc/shadow r,
+##   deny /etc/passwd r,
+##   deny /root/** rwx,
+##   deny /home/*/.ssh/** rwx,
+## }
+##
+## END APPARMOR PROFILE

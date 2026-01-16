@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DEVELOPMENT/LEARNING MODE - PERMISSIVE FIREWALL
+  
+  Firewall is ENABLED but configured to allow common services and apps to work.
+  This provides basic protection while letting you use the system normally.
+  
+  What's allowed:
+  - SSH, DHCP, mDNS (basic networking)
+  - KDE Connect (phone integration)
+  - Syncthing (file sync)
+  - Outgoing connections (all allowed by default)
+  
+  What's blocked:
+  - Incoming connections on unlisted ports
+  
+  To add more services, see: firewall-cmd --get-services
+-->
+
+<zone>
+  <short>Anthonyware</short>
+  <description>Development-friendly zone with essential services enabled</description>
+  
+  <!-- Basic networking -->
+  <service name="ssh"/>
+  <service name="dhcpv6-client"/>
+  <service name="mdns"/>
+  
+  <!-- KDE Connect for mobile device integration -->
+  <port protocol="tcp" port="1714-1764"/>
+  <port protocol="udp" port="1714-1764"/>
+  
+  <!-- Syncthing for file synchronization -->
+  <port protocol="tcp" port="22000"/>
+  <port protocol="udp" port="22000"/>
+  <port protocol="tcp" port="21027"/>
+  <port protocol="udp" port="21027"/>
+  
+  <!-- Add Samba if you need Windows file sharing -->
+  <!-- <service name="samba"/> -->
+  <!-- <service name="samba-client"/> -->
+  
+  <forward/>
+</zone>

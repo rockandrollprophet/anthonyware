@@ -1,0 +1,66 @@
+# AppArmor Profile for Dolphin File Manager
+# Security confinement for dolphin process
+#
+# ============================================================
+# SECURITY DISABLED FOR DEVELOPMENT/LEARNING
+# ============================================================
+# This AppArmor profile is COMMENTED OUT to allow full system access
+# during initial setup and learning phase.
+#
+# TO ENABLE: Uncomment the profile block below
+#
+# WARNING: Dolphin is currently UNCONFINED by AppArmor!
+# ============================================================
+
+## APPARMOR PROFILE DISABLED - UNCOMMENT TO ENABLE
+##
+## #include <tunables/global>
+##
+## /usr/bin/dolphin {
+##   #include <abstractions/base>
+##   #include <abstractions/nameservice>
+##   #include <abstractions/fonts>
+##   #include <abstractions/freedesktop.org>
+##   #include <abstractions/kde>
+##   #include <abstractions/user-tmp>
+##   #include <abstractions/X>
+##   #include <abstractions/wayland>
+##   
+##   # Binary execution
+##   /usr/bin/dolphin rix,
+##   /usr/lib/dolphin/** rix,
+##   /usr/lib/qt6/** mr,
+##   
+##   # Configuration
+##   owner @{HOME}/.config/dolphinrc rw,
+##   owner @{HOME}/.local/share/dolphin/** rw,
+##   owner @{HOME}/.cache/dolphin/** rw,
+##   
+##   # File access - read/write to user home
+##   owner @{HOME}/** rw,
+##   
+##   # Removable media
+##   /media/** rw,
+##   /mnt/** rw,
+##   /run/media/@{USER}/** rw,
+##   
+##   # System resources
+##   /proc/sys/kernel/random/uuid r,
+##   /sys/devices/system/cpu/** r,
+##   
+##   # Network for KIO slaves
+##   network inet stream,
+##   network inet6 stream,
+##   
+##   # D-Bus
+##   dbus send
+##        bus=session
+##        interface=org.freedesktop.FileManager1,
+##   
+##   # Deny sensitive locations
+##   deny /etc/shadow r,
+##   deny /etc/passwd r,
+##   deny /root/** rwx,
+## }
+##
+## END APPARMOR PROFILE
