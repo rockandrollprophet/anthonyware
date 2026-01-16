@@ -287,6 +287,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 ## System Requirements
 
 ### Minimum
+
 - **CPU**: x86_64 processor
 - **RAM**: 4GB
 - **Disk**: 30GB free space
@@ -294,6 +295,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 - **Network**: Internet connection required
 
 ### Recommended
+
 - **CPU**: Quad-core x86_64 with virtualization support
 - **RAM**: 8GB or more
 - **Disk**: 50GB+ SSD/NVMe

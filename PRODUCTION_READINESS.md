@@ -17,6 +17,7 @@ Anthonyware OS is now a **complete, production-grade Linux distribution** built 
 ### 1. Package Completeness
 
 **Added Missing GUI Utilities:**
+
 - ✅ Image viewer: `imv` (Wayland-native)
 - ✅ Calculator: `qalculate-gtk`
 - ✅ Font manager: `font-manager`
@@ -24,11 +25,13 @@ Anthonyware OS is now a **complete, production-grade Linux distribution** built 
 - ✅ PDF viewer: `zathura` with `zathura-pdf-mupdf`
 
 **Multimedia Codecs:**
+
 - ✅ GStreamer complete suite: base, good, bad, ugly, libav
 - ✅ FFmpeg with all codecs
 - ✅ Hardware acceleration support
 
 **System Integration:**
+
 - ✅ Polkit authentication agent (KDE) with autostart
 - ✅ Network manager applet
 - ✅ Bluetooth stack (bluez + bluez-utils + pulseaudio-bluetooth)
@@ -41,6 +44,7 @@ Anthonyware OS is now a **complete, production-grade Linux distribution** built 
 Six comprehensive diagnostic and repair tools:
 
 #### [scripts/troubleshoot-audio.sh](scripts/troubleshoot-audio.sh)
+
 - Checks PipeWire/WirePlumber services
 - Detects audio devices (sinks/sources)
 - Verifies kernel modules (snd_hda_intel, etc.)
@@ -49,6 +53,7 @@ Six comprehensive diagnostic and repair tools:
 - **Repairs:** Service restart, module reload, unmute, volume set
 
 #### [scripts/troubleshoot-gpu.sh](scripts/troubleshoot-gpu.sh)
+
 - Auto-detects GPU vendor (NVIDIA/AMD/Intel)
 - Checks driver status and kernel modules
 - Validates Vulkan and OpenGL
@@ -57,6 +62,7 @@ Six comprehensive diagnostic and repair tools:
 - **Repairs:** Load modules, detailed diagnostics
 
 #### [scripts/troubleshoot-network.sh](scripts/troubleshoot-network.sh)
+
 - NetworkManager service status
 - Interface detection and IP addresses
 - Gateway reachability tests
@@ -66,6 +72,7 @@ Six comprehensive diagnostic and repair tools:
 - **Repairs:** Service restart, DNS flush, interface reset, WiFi connection
 
 #### [scripts/troubleshoot-hyprland.sh](scripts/troubleshoot-hyprland.sh)
+
 - Session validation (Wayland/Hyprland)
 - Config file syntax checking
 - Essential dependency verification
@@ -74,6 +81,7 @@ Six comprehensive diagnostic and repair tools:
 - **Repairs:** Config reload, reset to defaults, component restarts
 
 #### [scripts/repair-packages.sh](scripts/repair-packages.sh)
+
 - Pacman database integrity
 - Orphaned package detection
 - Broken dependency checks
@@ -82,6 +90,7 @@ Six comprehensive diagnostic and repair tools:
 - **Repairs:** Database sync/upgrade, orphan removal, cache cleaning, package reinstall
 
 #### [scripts/service-manager.sh](scripts/service-manager.sh)
+
 - Interactive TUI for systemd service management
 - Supports both system and user services
 - Key services pre-configured
