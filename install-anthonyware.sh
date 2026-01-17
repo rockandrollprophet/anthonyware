@@ -435,13 +435,13 @@ if ! useradd -m -s /bin/bash "$USERNAME" 2>/dev/null; then
   fi
 fi
 
-# Set passwords
-if ! echo "$USERNAME:$PASSWORD" | chpasswd; then
+# Set passwords using passwd (more reliable than chpasswd in chroot)
+if ! echo -e "$PASSWORD\n$PASSWORD" | passwd "$USERNAME"; then
   echo "ERROR: Failed to set user password"
   exit 1
 fi
 
-if ! echo "root:$ROOT_PASSWORD" | chpasswd; then
+if ! echo -e "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd root; then
   echo "ERROR: Failed to set root password"
   exit 1
 fi
