@@ -43,6 +43,41 @@ fi
 LOG_DIR="${TARGET_HOME}/anthonyware-logs"
 mkdir -p "$LOG_DIR"
 
+# Guard: refuse to run on live ISO environments
+if [[ -d /run/archiso || -f /etc/archlive ]]; then
+  echo "[GUARD] Detected live ISO environment (/run/archiso present). Aborting to avoid installing to the live medium." | tee -a "$LOG_DIR/run-all.log"
+  echo "Reboot into the installed system and rerun: CONFIRM_INSTALL=YES bash install/run-all.sh" | tee -a "$LOG_DIR/run-all.log"
+  exit 3
+fi
+
+# Guard: require root (or sudo) to avoid partial installs
+if [[ "${EUID}" -ne 0 ]]; then
+  echo "[GUARD] Please run as root: sudo CONFIRM_INSTALL=YES bash install/run-all.sh" | tee -a "$LOG_DIR/run-all.log"
+  exit 3
+fi
+
+# Guard: ensure target home and repo exist
+if [[ ! -d "$TARGET_HOME" ]]; then
+  echo "[GUARD] Target home '$TARGET_HOME' not found. Verify TARGET_USER and HOME before running." | tee -a "$LOG_DIR/run-all.log"
+  exit 3
+fi
+
+if [[ ! -d "$REPO_PATH" ]]; then
+  echo "[GUARD] Repository path '$REPO_PATH' not found. Clone or set REPO_PATH, then rerun." | tee -a "$LOG_DIR/run-all.log"
+  exit 3
+fi
+
+# Preflight: pacman lock cleanup (best-effort, only if no pacman process)
+if [[ -e /var/lib/pacman/db.lck ]]; then
+  if ! pgrep -x pacman >/dev/null 2>&1; then
+    echo "[INFO] Removing stale pacman lock /var/lib/pacman/db.lck" | tee -a "$LOG_DIR/run-all.log"
+    rm -f /var/lib/pacman/db.lck || true
+  else
+    echo "[WARN] pacman is running; lock present. Abort and rerun later." | tee -a "$LOG_DIR/run-all.log"
+    exit 3
+  fi
+fi
+
 # Checkpoint file to track progress
 CHECKPOINT_FILE="$LOG_DIR/installation-checkpoint.txt"
 touch "$CHECKPOINT_FILE"

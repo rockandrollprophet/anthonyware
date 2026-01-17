@@ -39,24 +39,14 @@ fi
 # Derive home; if missing, attempt to getent
 TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)" || TARGET_HOME="$TARGET_HOME_DEFAULT"
 
-# Grant sudo permissions (add to sudoers with NOPASSWD for wheel group or create entry)
-if ! sudo -u "$TARGET_USER" -n true 2>/dev/null; then
-  echo "[WARN] User '${TARGET_USER}' does not have passwordless sudo."
-  read -r -p "Grant sudo (NOPASSWD) to '${TARGET_USER}'? [y/N]: " GRANT_SUDO || true
-  if [[ "${GRANT_SUDO,,}" == "y" || "${GRANT_SUDO,,}" == "yes" ]]; then
-    echo "Adding ${TARGET_USER} to sudoers..."
-    # Use usermod to add to wheel group if it exists, else create sudoers entry
-    if grep -q "^wheel:" /etc/group 2>/dev/null; then
-      sudo usermod -aG wheel "$TARGET_USER" || true
-      echo "Added ${TARGET_USER} to wheel group"
-    else
-      # Fallback: add direct sudoers entry
-      echo "${TARGET_USER} ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/${TARGET_USER}" >/dev/null
-      sudo chmod 0440 "/etc/sudoers.d/${TARGET_USER}"
-      echo "Created sudoers entry for ${TARGET_USER}"
-    fi
-  fi
+# Grant sudo permissions (always ensure NOPASSWD for unattended runs)
+echo "Ensuring sudo access for ${TARGET_USER} (NOPASSWD)..."
+if grep -q "^wheel:" /etc/group 2>/dev/null; then
+  sudo usermod -aG wheel "$TARGET_USER" || true
 fi
+echo "${TARGET_USER} ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/${TARGET_USER}" >/dev/null
+sudo chmod 0440 "/etc/sudoers.d/${TARGET_USER}"
+echo "Sudoers entry created: /etc/sudoers.d/${TARGET_USER}"
 
 read -r -p "Enter hostname for this machine [${CURRENT_HOSTNAME}]: " HOSTNAME_INPUT || true
 HOSTNAME_VALUE="${HOSTNAME_INPUT:-$CURRENT_HOSTNAME}"
