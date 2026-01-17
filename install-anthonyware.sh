@@ -425,7 +425,15 @@ if [[ -z "$ROOT_PASSWORD" ]]; then
 fi
 
 # Run chroot configuration with comprehensive error handling
-env CHROOT_PASSWORD="$PASSWORD" CHROOT_ROOT_PASSWORD="$ROOT_PASSWORD" arch-chroot /mnt /bin/bash << CHROOT_EOF
+env \
+  CHROOT_PASSWORD="$PASSWORD" \
+  CHROOT_ROOT_PASSWORD="$ROOT_PASSWORD" \
+  USERNAME="$USERNAME" \
+  HOSTNAME="$HOSTNAME" \
+  TIMEZONE="$TIMEZONE" \
+  LOCALE="$LOCALE" \
+  REPO_URL="$REPO_URL" \
+  arch-chroot /mnt /bin/bash << 'CHROOT_EOF'
 # Use -e and pipefail; skip -u to avoid unbound variable exits when values are empty
 set -eo pipefail
 
