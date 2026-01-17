@@ -381,6 +381,29 @@ echo "✓ Base system installed and verified"
 echo
 echo "[6/6] Configuring system in chroot..."
 
+# Validate passwords before proceeding
+if [[ -z "$PASSWORD" ]]; then
+  echo "ERROR: User password is empty"
+  exit 1
+fi
+
+if [[ -z "$ROOT_PASSWORD" ]]; then
+  echo "ERROR: Root password is empty"
+  exit 1
+fi
+
+# Create temporary password file (secure, root-only)
+PASS_FILE=$(mktemp)
+chmod 600 "$PASS_FILE"
+cat > "$PASS_FILE" << PASSEOF
+$USERNAME:$PASSWORD
+root:$ROOT_PASSWORD
+PASSEOF
+
+# Copy password file into chroot
+cp "$PASS_FILE" /mnt/.password_temp
+chmod 600 /mnt/.password_temp
+
 # Run chroot configuration with comprehensive error handling
 arch-chroot /mnt /bin/bash << CHROOT_EOF
 set -euo pipefail
@@ -435,16 +458,20 @@ if ! useradd -m -s /bin/bash "$USERNAME" 2>/dev/null; then
   fi
 fi
 
-# Set passwords using passwd (more reliable than chpasswd in chroot)
-if ! echo -e "$PASSWORD\n$PASSWORD" | passwd "$USERNAME"; then
-  echo "ERROR: Failed to set user password"
+# Set passwords from temporary file
+echo "Setting passwords..."
+if [[ ! -f /.password_temp ]]; then
+  echo "ERROR: Password file not found"
   exit 1
 fi
 
-if ! echo -e "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd root; then
-  echo "ERROR: Failed to set root password"
+if ! chpasswd < /.password_temp; then
+  echo "ERROR: Failed to set passwords via chpasswd"
   exit 1
 fi
+
+# Remove password file immediately
+rm -f /.password_temp
 
 # Grant wheel group passwordless sudo (temporary for installation)
 if ! sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers; then
@@ -524,6 +551,13 @@ fi
 echo "=== Chroot configuration complete ==="
 
 CHROOT_EOF
+
+# Copy password file into chroot before running (insert above the heredoc)
+# Actually, we need to insert this BEFORE the heredoc runs
+# Let me fix the flow properly
+
+# Clean up password file
+rm -f "$PASS_FILE"
 
 # ============================================================
 #  CLEANUP & REBOOT
