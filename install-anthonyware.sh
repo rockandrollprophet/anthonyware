@@ -585,13 +585,6 @@ echo "=== Chroot configuration complete ==="
 
 CHROOT_EOF
 
-# Copy password file into chroot before running (insert above the heredoc)
-# Actually, we need to insert this BEFORE the heredoc runs
-# Let me fix the flow properly
-
-# Clean up password file
-rm -f "$PASS_FILE"
-
 # ============================================================
 #  CLEANUP & REBOOT
 # ============================================================
