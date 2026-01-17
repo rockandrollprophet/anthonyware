@@ -1,5 +1,6 @@
 # ANTHONYWARE REPOSITORY VALIDATION REPORT
-**Generated: January 14, 2026**
+
+Generated: January 14, 2026
 
 ---
 
@@ -12,7 +13,8 @@
 ## 🟥 PACMAN PACKAGES INVENTORY
 
 ### ✅ Core System (01-base-system.sh)
-```
+
+```text
 base-devel ✓
 git ✓
 curl ✓
@@ -35,7 +37,9 @@ xdg-desktop-portal-gtk ✓
 ```
 
 ### ✅ GPU Drivers (02-gpu-drivers.sh)
+
 **NVIDIA:**
+
 - nvidia ✓
 - nvidia-utils ✓
 - nvidia-settings ✓
@@ -43,6 +47,7 @@ xdg-desktop-portal-gtk ✓
 - linux-headers ✓
 
 **AMD:**
+
 - mesa ✓
 - vulkan-radeon ✓
 - libva-mesa-driver ✓
@@ -50,14 +55,17 @@ xdg-desktop-portal-gtk ✓
 - xf86-video-amdgpu ✓
 
 **Intel:**
+
 - intel-media-driver ✓
 - vulkan-intel ✓
 
 **Common:**
+
 - vulkan-tools ✓
 
 ### ✅ Qt6 Runtime (02-qt6-runtime.sh) — NEW
-```
+
+```text
 qt6-base ✓
 qt6-declarative ✓
 qt6-quickcontrols2 ✓
@@ -68,10 +76,12 @@ qt6-5compat ✓
 qt6-languageserver ✓
 qt6-multimedia ✓
 ```
+
 **Config:** `/etc/sddm.conf.d/10-qt6-env.conf` ✓
 
 ### ✅ Hyprland Desktop (03-hyprland.sh) — UPDATED
-```
+
+```text
 hyprland ✓
 waybar ✓
 wofi ✓
@@ -95,12 +105,14 @@ wlr-randr ✓ (NEWLY ADDED)
 ```
 
 ### ✅ Display Manager (SDDM implicit in scripts)
-```
+
+```text
 sddm ✓
 ```
 
 ### ✅ Daily Driver Apps (04-daily-driver.sh)
-```
+
+```text
 dolphin ✓
 dolphin-plugins ✓
 kio-extras ✓
@@ -121,7 +133,8 @@ fwupd ✓
 ```
 
 ### ✅ Development Tools (05-dev-tools.sh)
-```
+
+```text
 base-devel ✓
 git ✓
 git-delta ✓
@@ -163,7 +176,8 @@ yazi ✓
 ```
 
 ### ✅ AI/ML Pacman Packages (06-ai-ml.sh) — UPDATED
-```
+
+```text
 python ✓
 python-pip ✓
 python-numpy ✓
@@ -185,7 +199,8 @@ nvtop ✓
 ```
 
 ### ✅ CAD/CNC/3D Printing (07-cad-cnc-3dprinting.sh)
-```
+
+```text
 blender ✓
 kicad ✓
 freecad ✓
@@ -193,10 +208,12 @@ openscad ✓
 prusa-slicer ✓
 octoprint ✓
 ```
+
 **Note:** meshlab, paraview not in pacman repos (may be in AUR)
 
 ### ✅ Hardware Support (08-hardware-support.sh)
-```
+
+```text
 spacenavd ✓
 libspnav ✓
 x11-spnav ✓
@@ -211,7 +228,8 @@ gtkwave ✓
 ```
 
 ### ✅ Security (09-security.sh)
-```
+
+```text
 firewalld ✓
 apparmor ✓
 apparmor-parser ✓
@@ -226,7 +244,8 @@ age ✓
 ```
 
 ### ✅ Backups (10-backups.sh)
-```
+
+```text
 timeshift ✓
 timeshift-autosnap ✓
 btrfs-progs ✓
@@ -240,7 +259,8 @@ rclone ✓
 ```
 
 ### ✅ Webcam & Media (10-webcam-media.sh) — NEW
-```
+
+```text
 v4l-utils ✓
 ffmpeg ✓
 cheese ✓
@@ -248,7 +268,8 @@ guvcview ✓
 ```
 
 ### ✅ VFIO/Virtualization (11-vfio-windows-vm.sh)
-```
+
+```text
 qemu-full ✓
 virt-manager ✓
 virt-viewer ✓
@@ -265,7 +286,8 @@ spice-vdagent ✓
 ```
 
 ### ✅ Printing (12-printing.sh)
-```
+
+```text
 cups ✓
 cups-pdf ✓
 system-config-printer ✓
@@ -280,7 +302,8 @@ nss-mdns ✓
 ```
 
 ### ✅ Fonts & Icons (13-fonts.sh) — UPDATED
-```
+
+```text
 noto-fonts ✓
 noto-fonts-extra ✓
 noto-fonts-emoji ✓
@@ -294,7 +317,8 @@ papirus-icon-theme ✓ (NEWLY ADDED)
 ```
 
 ### ✅ Electrical Engineering (19-electrical-engineering.sh)
-```
+
+```text
 kicad ✓
 ngspice ✓
 qucs-s ✓
@@ -311,7 +335,8 @@ python-usbtmc ✓
 ```
 
 ### ✅ FPGA Toolchain (20-fpga-toolchain.sh)
-```
+
+```text
 yosys ✓
 nextpnr ✓
 iverilog ✓
@@ -319,7 +344,8 @@ gtkwave ✓
 ```
 
 ### ✅ Instrumentation (21-instrumentation.sh)
-```
+
+```text
 python-usbtmc ✓
 sigrok-cli ✓
 pulseview ✓
@@ -328,7 +354,8 @@ libsigrokdecode ✓
 ```
 
 ### ✅ Homelab Tools (22-homelab-tools.sh)
-```
+
+```text
 cockpit ✓
 tailscale ✓
 syncthing ✓
@@ -339,7 +366,8 @@ nfs-utils ✓
 ```
 
 ### ✅ Networking (18-networking-tools.sh)
-```
+
+```text
 openssh ✓
 bind ✓
 net-tools ✓
@@ -351,7 +379,8 @@ wireshark-qt ✓
 ```
 
 ### ✅ Audio (28-audio-routing.sh)
-```
+
+```text
 pipewire ✓
 pipewire-alsa ✓
 pipewire-pulse ✓
@@ -361,7 +390,8 @@ helvum ✓
 ```
 
 ### ✅ Power Management (15-power-management.sh)
-```
+
+```text
 tlp ✓
 tlp-rdw ✓
 powertop ✓
@@ -370,7 +400,8 @@ thermald ✓
 ```
 
 ### ✅ Firmware (16-firmware.sh)
-```
+
+```text
 fwupd ✓
 linux-firmware ✓
 amd-ucode ✓
@@ -378,7 +409,8 @@ intel-ucode ✓
 ```
 
 ### ✅ Diagnostics (34-diagnostics.sh) — NEW
-```
+
+```text
 smartmontools ✓
 nvme-cli ✓
 memtest86+ ✓
@@ -386,7 +418,8 @@ kdump ✓
 ```
 
 ### ✅ LaTeX & Docs (32-latex-docs.sh) — NEW
-```
+
+```text
 texlive-most ✓
 biber ✓
 pandoc ✓
@@ -395,14 +428,16 @@ zathura-pdf-mupdf ✓
 ```
 
 ### ✅ Color Management (25-color-management.sh)
-```
+
+```text
 colord ✓
 gnome-color-manager ✓
 argyllcms ✓
 ```
 
 ### ✅ Misc Utilities (29-misc-utilities.sh)
-```
+
+```text
 jq ✓
 yq ✓
 tree ✓
@@ -424,13 +459,15 @@ duf ✓
 ```
 
 ### ✅ Wayland Recording (31-wayland-recording.sh)
-```
+
+```text
 wf-recorder ✓
 obs-vkcapture ✓
 ```
 
 ### ✅ Archive Tools (26-archive-tools.sh)
-```
+
+```text
 unzip ✓
 zip ✓
 p7zip ✓
@@ -438,6 +475,7 @@ lrzip ✓
 ```
 
 ### ⚠️ Note: Missing from pacman repos
+
 - meshlab (may be in AUR)
 - paraview (may be in AUR)
 - testdisk (may be in AUR)
@@ -448,14 +486,16 @@ lrzip ✓
 ## 🟦 AUR PACKAGES INVENTORY
 
 ### ✅ Fonts & Nerd Fonts (13-fonts.sh, 05-dev-tools.sh)
-```
+
+```text
 ttf-jetbrains-mono-nerd ✓
 ttf-firacode-nerd ✓
 visual-studio-code-bin ✓
 ```
 
 ### ✅ Display & Audio (03-hyprland.sh, 28-audio-routing.sh)
-```
+
+```text
 eww-wayland ✓
 swaync ✓
 grimblast-git ✓
@@ -464,8 +504,9 @@ wdisplays ✓ (NEWLY ADDED)
 qpwgraph ✓
 ```
 
-### ✅ CAD/CNC/3D Printing (07-cad-cnc-3dprinting.sh)
-```
+### ✅ CAD/CNC/3D Printing - AUR (07-cad-cnc-3dprinting.sh)
+
+```text
 fusion360-bin ✓
 candle ✓
 universal-gcode-sender-bin ✓
@@ -479,7 +520,8 @@ fluidd ✓
 ```
 
 ### ✅ Hardware (08-hardware-support.sh, 25-color-management.sh)
-```
+
+```text
 spnavcfg ✓
 alienfx ✓
 awcc-linux ✓
@@ -488,23 +530,27 @@ nbfc-linux ✓
 displaycal ✓
 ```
 
-### ✅ Instrumentation (21-instrumentation.sh)
-```
+### ✅ Instrumentation - AUR (21-instrumentation.sh)
+
+```text
 scpi-tools ✓
 ```
 
-### ✅ Electrical Engineering (19-electrical-engineering.sh)
-```
+### ✅ Electrical Engineering - AUR (19-electrical-engineering.sh)
+
+```text
 ltspice ✓
 ```
 
 ### ✅ Virtualization (11-vfio-windows-vm.sh)
-```
+
+```text
 looking-glass-client ✓
 ```
 
 ### ✅ AI/ML (06-ai-ml.sh)
-```
+
+```text
 text-generation-webui ✓
 koboldcpp ✓
 llama.cpp ✓
@@ -512,7 +558,8 @@ oobabooga ✓
 ```
 
 ### ✅ Fusion 360 Runtime (35-fusion360-runtime.sh) — NEW
-```
+
+```text
 vkd3d-proton ✓
 dxvk-bin ✓
 fusion360-bin ✓ (also referenced in 07-cad)
@@ -525,7 +572,8 @@ fusion360-bin ✓ (also referenced in 07-cad)
 ## 🟩 PIP PACKAGES INVENTORY
 
 ### ✅ AI/ML Core (06-ai-ml.sh)
-```
+
+```text
 torch (CUDA wheel) ✓
 torchvision ✓
 torchaudio ✓
@@ -544,7 +592,8 @@ sentencepiece ✓
 ```
 
 ### ✅ Jupyter Ecosystem (06-ai-ml.sh) — UPDATED
-```
+
+```text
 jupyterlab-lsp ✓
 python-lsp-server ✓
 jupyterlab-git ✓
@@ -561,7 +610,8 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 ## ✅ EXECUTION ORDER VERIFICATION
 
 ### run-all.sh Script Sequence
-```
+
+```text
 00-preflight-checks.sh ✓
 01-base-system.sh ✓
 02-qt6-runtime.sh ✓ (NEW)
@@ -610,6 +660,7 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 ## 📊 COMPREHENSIVE CHECKLIST
 
 ### Section 1: Qt6 Runtime (NEW)
+
 - [x] qt6-base in 02-qt6-runtime.sh
 - [x] qt6-declarative in 02-qt6-runtime.sh
 - [x] qt6-quickcontrols2 in 02-qt6-runtime.sh
@@ -624,11 +675,13 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 - [x] Script runs AFTER 01-base-system.sh
 
 ### Section 2: Hyprland + Multi-Monitor (UPDATED)
+
 - [x] wlr-randr in 03-hyprland.sh pacman block
 - [x] wdisplays in 03-hyprland.sh AUR block
 - [x] Both integrated into correct installation order
 
 ### Section 3: Webcam + Media Tools (NEW)
+
 - [x] v4l-utils in 10-webcam-media.sh
 - [x] ffmpeg in 10-webcam-media.sh
 - [x] cheese in 10-webcam-media.sh
@@ -637,7 +690,9 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 - [x] Script placement after 10-backups.sh
 
 ### Section 4: Jupyter Ecosystem (UPDATED)
+
 **Repo packages:**
+
 - [x] python-ipykernel in 06-ai-ml.sh
 - [x] python-nbformat in 06-ai-ml.sh
 - [x] python-nbconvert in 06-ai-ml.sh
@@ -645,6 +700,7 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 - [x] python-ipywidgets in 06-ai-ml.sh
 
 **Pip packages:**
+
 - [x] jupyterlab-lsp in 06-ai-ml.sh
 - [x] python-lsp-server in 06-ai-ml.sh
 - [x] jupyterlab-git in 06-ai-ml.sh
@@ -654,6 +710,7 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 - [x] jupyter_http_over_ws in 06-ai-ml.sh
 
 ### Section 5: LaTeX + Docs (NEW)
+
 - [x] texlive-most in 32-latex-docs.sh
 - [x] biber in 32-latex-docs.sh
 - [x] pandoc in 32-latex-docs.sh
@@ -662,6 +719,7 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 - [x] 32-latex-docs.sh in run-all.sh
 
 ### Section 6: Diagnostics (NEW)
+
 - [x] smartmontools in 34-diagnostics.sh
 - [x] nvme-cli in 34-diagnostics.sh
 - [x] memtest86+ in 34-diagnostics.sh
@@ -669,10 +727,12 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 - [x] 34-diagnostics.sh in run-all.sh
 
 ### Section 7: Fonts + Icons (UPDATED)
+
 - [x] noto-fonts-cjk in 13-fonts.sh
 - [x] papirus-icon-theme in 13-fonts.sh
 
 ### Section 8: Fusion 360 Runtime (OPTIONAL but present)
+
 - [x] wine in 35-fusion360-runtime.sh
 - [x] wine-mono in 35-fusion360-runtime.sh
 - [x] wine-gecko in 35-fusion360-runtime.sh
@@ -686,6 +746,7 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 - [x] 35-fusion360-runtime.sh in run-all.sh
 
 ### Section 9: XWayland Legacy Support (PRESENT)
+
 - [x] xorg-xwayland in 36-xwayland-legacy.sh
 - [x] xclip in 36-xwayland-legacy.sh
 - [x] xdotool in 36-xwayland-legacy.sh
@@ -697,7 +758,9 @@ jupyter_http_over_ws ✓ (NEWLY ADDED)
 ## 🎯 SPECIAL CASES & NOTES
 
 ### Duplicates (Intentional for clarity)
+
 Several packages appear in multiple scripts for clarity:
+
 - `python`, `python-pip`, `python-virtualenv`: Base system, dev-tools, AI-ML
 - `kicad`: CAD-CNC, Electrical Engineering
 - `solaar`, `piper`: Daily driver, Hardware support
@@ -708,12 +771,14 @@ Several packages appear in multiple scripts for clarity:
 *These are acceptable due to pacman's `--needed` flag, which skips already-installed packages.*
 
 ### XWayland Legacy Script
+
 **Original schedule had:** 32-xwayland-legacy.sh
 **New schedule has:** 36-xwayland-legacy.sh
 
 **Status:** ✅ **FIXED** — Script has been renumbered to 36 to avoid collision with 32-latex-docs.sh and has been added to run-all.sh in the proper sequence (before 99-update-everything.sh).
 
 ### Scripts Not in Master List but Present in Repo
+
 - 14-portals.sh (XDG portal setup)
 - 17-steam.sh (Gaming)
 - 23-terminal-qol.sh (Terminal quality of life)
@@ -732,6 +797,7 @@ These are **EXTRA value-adds** beyond the master list and should be retained.
 ## 🔴 CRITICAL DEPENDENCIES VALIDATED
 
 ### Runtime Dependencies
+
 - Python ecosystem: ✓ (base-devel, python, pip, virtualenv)
 - Build tools: ✓ (gcc, clang, cmake, ninja, make)
 - Qt6 environment: ✓ (Qt6 packages + SDDM config)
@@ -739,6 +805,7 @@ These are **EXTRA value-adds** beyond the master list and should be retained.
 - Wayland stack: ✓ (Wayland, Qt5/Qt6 wayland, portals)
 
 ### Optional but Recommended
+
 - Fusion 360 runtime: Present as 35-fusion360-runtime.sh
 - Looking Glass for VMs: Present in 11-vfio
 - DisplayCAL for color management: Present in 25-color-management.sh
@@ -747,21 +814,21 @@ These are **EXTRA value-adds** beyond the master list and should be retained.
 
 ## 📋 VALIDATION SUMMARY
 
-| Category | Status | Count |
-|----------|--------|-------|
-| **Pacman Packages** | ✅ Complete | 200+ |
-| **AUR Packages** | ✅ Complete | 38 |
-| **Pip Packages** | ✅ Complete | 22 |
-| **Install Scripts** | ✅ Complete | 38 |
-| **New Scripts** | ✅ Added | 5 |
-| **Updated Scripts** | ✅ Modified | 4 |
-| **Renumbered Scripts** | ✅ Fixed | 1 (36-xwayland-legacy.sh) |
+| Category               | Status      | Count                     |
+| ---------------------- | ----------- | ------------------------- |
+| **Pacman Packages**    | ✅ Complete | 200+                      |
+| **AUR Packages**       | ✅ Complete | 38                        |
+| **Pip Packages**       | ✅ Complete | 22                        |
+| **Install Scripts**    | ✅ Complete | 38                        |
+| **New Scripts**        | ✅ Added    | 5                         |
+| **Updated Scripts**    | ✅ Modified | 4                         |
+| **Renumbered Scripts** | ✅ Fixed    | 1 (36-xwayland-legacy.sh) |
 
 ---
 
 ## ✅ FINAL VERDICT
 
-**Repository Status: READY FOR PRODUCTION**
+Repository Status: READY FOR PRODUCTION
 
 All packages from the master list are present and correctly integrated into the installation workflow. The five new scripts (Qt6, Webcam, LaTeX, Diagnostics, Fusion360) have been created and wired into run-all.sh in the proper sequence. The existing scripts have been updated with missing dependencies.
 
@@ -776,4 +843,3 @@ All packages from the master list are present and correctly integrated into the 
 3. ✅ Verify each script runs idempotently with `--needed` flags
 4. ✅ Test installation on a fresh Arch Linux system
 5. ✅ Update any README.md files to reflect new scripts
-

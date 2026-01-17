@@ -1,4 +1,5 @@
 # 🎯 ANTHONYWARE MASTER DEPENDENCY MANIFEST
+
 ## Complete Validation Against Master Package List
 
 **Validation Date:** January 14, 2026  
@@ -8,7 +9,7 @@
 
 ## 📊 COVERAGE MATRIX
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ PACKAGE DISTRIBUTION                                        │
 ├─────────────────────────────────────────────────────────────┤
@@ -24,7 +25,7 @@
 
 ## 🚀 INSTALLATION SCRIPTS
 
-```
+```text
 Total: 38 Scripts in Execution Order
 ├── System Setup (Core foundation)
 │   ├── 00-preflight-checks.sh
@@ -86,7 +87,8 @@ Total: 38 Scripts in Execution Order
 ## ✅ MANDATORY SECTIONS VERIFIED
 
 ### 1️⃣ Qt6 Runtime (NEW) — 9 Packages + Config
-```
+
+```text
 ✓ qt6-base              ✓ qt6-5compat
 ✓ qt6-declarative       ✓ qt6-languageserver
 ✓ qt6-quickcontrols2    ✓ qt6-multimedia
@@ -94,76 +96,93 @@ Total: 38 Scripts in Execution Order
 ✓ qt6-shadertools
 ✓ qt6-tools
 ```
+
 📍 **Location:** install/02-qt6-runtime.sh → run-all.sh position #3
 
 ---
 
 ### 2️⃣ Hyprland + Multi-Monitor (UPDATED) — 2 Packages
-```
+
+```text
 ✓ wlr-randr (pacman)    ✓ wdisplays (AUR)
 ```
+
 📍 **Location:** install/03-hyprland.sh (updated)
 
 ---
 
 ### 3️⃣ Webcam + Media (NEW) — 4 Packages
-```
+
+```text
 ✓ v4l-utils            ✓ ffmpeg
 ✓ cheese               ✓ guvcview
 ```
+
 📍 **Location:** install/10-webcam-media.sh → run-all.sh position #12
 
 ---
 
 ### 4️⃣ Jupyter Ecosystem (UPDATED) — 12 Packages
+
 **Repo Packages:**
-```
+
+```text
 ✓ python-ipykernel          ✓ python-jupyterlab_server
 ✓ python-nbformat           ✓ python-ipywidgets
 ✓ python-nbconvert
 ```
 
 **Pip Packages:**
-```
+
+```text
 ✓ jupyterlab-lsp            ✓ jupyterlab-code-formatter
 ✓ python-lsp-server         ✓ jupyterlab_execute_time
 ✓ jupyterlab-git            ✓ jupyter_http_over_ws
 ✓ jupyterlab-variableinspector
 ```
+
 📍 **Location:** install/06-ai-ml.sh (updated)
 
 ---
 
 ### 5️⃣ LaTeX + Docs (NEW) — 5 Packages
-```
+
+```text
 ✓ texlive-most          ✓ pandoc
 ✓ biber                 ✓ zathura
                         ✓ zathura-pdf-mupdf
 ```
+
 📍 **Location:** install/32-latex-docs.sh → run-all.sh position #33
 
 ---
 
 ### 6️⃣ Diagnostics (NEW) — 4 Packages
-```
+
+```text
 ✓ smartmontools         ✓ memtest86+
 ✓ nvme-cli              ✓ kdump
 ```
+
 📍 **Location:** install/34-diagnostics.sh → run-all.sh position #35
 
 ---
 
 ### 7️⃣ Fonts + Icons (UPDATED) — 2 Packages
-```
+
+```text
 ✓ noto-fonts-cjk        ✓ papirus-icon-theme
 ```
+
 📍 **Location:** install/13-fonts.sh (updated)
 
 ---
 
 ### 8️⃣ Fusion 360 Runtime (NEW) — 10 Packages
+
 **Pacman:**
-```
+
+```text
 ✓ wine                  ✓ bottles
 ✓ wine-mono             ✓ vkd3d
 ✓ wine-gecko            ✓ vulkan-icd-loader
@@ -171,10 +190,12 @@ Total: 38 Scripts in Execution Order
 ```
 
 **AUR:**
-```
+
+```text
 ✓ vkd3d-proton          ✓ dxvk-bin
 ✓ fusion360-bin
 ```
+
 📍 **Location:** install/35-fusion360-runtime.sh → run-all.sh position #37
 
 ---
@@ -182,87 +203,115 @@ Total: 38 Scripts in Execution Order
 ## 📦 BREAKDOWN BY CATEGORY
 
 ### Core System
+
 ✅ 24 packages → 01-base-system.sh
 
 ### GPU Drivers
+
 ✅ 13 packages → 02-gpu-drivers.sh (NVIDIA/AMD/Intel)
 
 ### Hyprland Desktop
+
 ✅ 21 packages → 03-hyprland.sh
 
 ### Development Tools
+
 ✅ 38 packages → 05-dev-tools.sh
 
 ### AI/ML Stack
+
 ✅ 28 packages → 06-ai-ml.sh
 
 ### CAD/CNC/3D Printing
+
 ✅ 15 packages → 07-cad-cnc-3dprinting.sh
 
 ### Hardware Support
+
 ✅ 13 packages → 08-hardware-support.sh
 
 ### Security
+
 ✅ 11 packages → 09-security.sh
 
 ### Backups & Snapshots
+
 ✅ 10 packages → 10-backups.sh
 
 ### Webcam & Media
+
 ✅ 4 packages → 10-webcam-media.sh ⭐
 
 ### VFIO/Virtualization
+
 ✅ 13 packages → 11-vfio-windows-vm.sh
 
 ### Printing
+
 ✅ 11 packages → 12-printing.sh
 
 ### Fonts & Icons
+
 ✅ 10 packages → 13-fonts.sh
 
 ### Networking
+
 ✅ 10 packages → 18-networking-tools.sh
 
 ### Electrical Engineering
+
 ✅ 13 packages → 19-electrical-engineering.sh
 
 ### FPGA Toolchain
+
 ✅ 4 packages → 20-fpga-toolchain.sh
 
 ### Instrumentation
+
 ✅ 5 packages → 21-instrumentation.sh
 
 ### Homelab Tools
+
 ✅ 7 packages → 22-homelab-tools.sh
 
 ### Power Management
+
 ✅ 5 packages → 15-power-management.sh
 
 ### Firmware
+
 ✅ 4 packages → 16-firmware.sh
 
 ### Audio & Routing
+
 ✅ 7 packages → 28-audio-routing.sh
 
 ### Color Management
+
 ✅ 4 packages → 25-color-management.sh
 
 ### Diagnostics
+
 ✅ 4 packages → 34-diagnostics.sh ⭐
 
 ### LaTeX & Docs
+
 ✅ 5 packages → 32-latex-docs.sh ⭐
 
 ### XWayland Legacy
+
 ✅ 4 packages → 36-xwayland-legacy.sh
 
 ### Misc Utilities
+
 ✅ 18 packages → 29-misc-utilities.sh
 
 ### Archive Tools
+
 ✅ 4 packages → 26-archive-tools.sh
 
 ### Wayland Recording
+
 ✅ 2 packages → 31-wayland-recording.sh
 
 ---
@@ -281,6 +330,7 @@ Total: 38 Scripts in Execution Order
 ## 📋 CHECKLIST FOR YOU
 
 ### Verify Installation Completeness
+
 ```bash
 # 1. Count total scripts
 ls install/*.sh | wc -l         # Should be 38
@@ -315,7 +365,7 @@ grep -c "36-xwayland-legacy" install/run-all.sh  # Should be 1
 ## 🔍 VALIDATION METRICS
 
 | Metric | Status | Details |
-|--------|--------|---------|
+| ------ | ------ | ------- |
 | **Total Packages** | ✅ 260+ | 200+ pacman, 38 AUR, 22 pip |
 | **Installation Scripts** | ✅ 38 | All numbered and in sequence |
 | **New Scripts** | ✅ 5 | Qt6, Webcam, LaTeX, Diagnostics, Fusion360 |
@@ -330,7 +380,7 @@ grep -c "36-xwayland-legacy" install/run-all.sh  # Should be 1
 
 ## 📚 DOCUMENTATION FILES
 
-```
+```text
 📄 VALIDATION_COMPLETE.md ............... This file (summary + verification)
 📄 PACKAGE_VALIDATION_REPORT.md ........ Detailed audit (260+ items)
 📄 PACKAGE_MANIFEST.md ................. Master checklist (use for tracking)
@@ -360,7 +410,7 @@ grep -c "36-xwayland-legacy" install/run-all.sh  # Should be 1
 
 ## 🎉 FINAL STATUS
 
-```
+```text
 ╔════════════════════════════════════════════════════╗
 ║                                                    ║
 ║    ✅ ANTHONYWARE REPOSITORY VALIDATION COMPLETE   ║

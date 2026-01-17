@@ -13,6 +13,7 @@
 **File**: [install-anthonyware.sh](install-anthonyware.sh)
 
 **Enhancements Made:**
+
 - ✅ Added trap handlers (ERR, EXIT, INT, TERM)
 - ✅ Added cleanup() function for safe unmounting
 - ✅ Added error_handler() with line number reporting
@@ -26,11 +27,13 @@
 ### 2. ✅ Debugged Every Line of Code
 
 **Results:**
+
 - **Shell Scripts**: 48 scripts checked → **0 ERRORS FOUND** ✅
 - **Main Installer**: Syntax validated → **NO ERRORS** ✅
 - **All Scripts**: Production ready → **VERIFIED** ✅
 
 **Scripts Validated:**
+
 - `install-anthonyware.sh` - Main installer
 - `install/*.sh` (34 scripts) - Installation pipeline
 - `scripts/*.sh` (14 scripts) - Maintenance and troubleshooting tools
@@ -38,13 +41,15 @@
 ### 3. ✅ Investigated VSCode "Problems"
 
 **Finding:** The "hundreds of problems" VSCode was showing are:
+
 - **962 markdown linting warnings** (cosmetic formatting only)
 - **NOT actual code errors**
 - **Examples:** Missing blank lines, trailing punctuation in headings, bare URLs, table formatting
 
 **Types of Warnings:**
+
 | Warning Type | Count | Impact |
-|--------------|-------|--------|
+| -------------- | ------- | -------- |
 | MD031 (fenced code blanks) | ~524 | Cosmetic |
 | MD022 (heading blanks) | ~286 | Cosmetic |
 | MD032 (list blanks) | ~98 | Cosmetic |
@@ -54,6 +59,7 @@
 | MD060 (table format) | ~2 | Cosmetic |
 
 **Solution Provided:**
+
 - Created [scripts/fix-markdown-lint.sh](scripts/fix-markdown-lint.sh) to automatically fix most issues
 
 ---
@@ -73,7 +79,7 @@
 ### Error Handling Coverage
 
 | Section | Error Handling | Status |
-|---------|---------------|--------|
+| --------- | --------------- | -------- |
 | Trap Handlers | ERR, EXIT, INT, TERM | ✅ Complete |
 | Partitioning | Disk validation, mount checks | ✅ Complete |
 | Formatting | mkfs validation | ✅ Complete |
@@ -118,7 +124,8 @@
 ## Code Quality Metrics
 
 ### Before Enhancement
-```
+
+```text
 Error Handling:        Basic
 Validation:            Minimal  
 Error Messages:        Generic
@@ -127,7 +134,8 @@ Trap Handlers:         None
 ```
 
 ### After Enhancement
-```
+
+```text
 Error Handling:        ✅ Comprehensive
 Validation:            ✅ Every critical operation
 Error Messages:        ✅ Helpful with context
@@ -143,6 +151,7 @@ Line Number Reporting: ✅ Implemented
 ### ✅ PRODUCTION READY
 
 **Code Quality:**
+
 - ✅ Zero syntax errors
 - ✅ Comprehensive error handling
 - ✅ Validated all critical operations
@@ -151,12 +160,14 @@ Line Number Reporting: ✅ Implemented
 - ✅ Automatic cleanup
 
 **Testing Status:**
+
 - ✅ Syntax validation passed
 - ✅ Error handling logic reviewed
 - ✅ Failure scenarios identified
 - 🔄 VM testing recommended before production deployment
 
 **Documentation:**
+
 - ✅ Error handling documented
 - ✅ Testing guide provided
 - ✅ Best practices documented
@@ -169,6 +180,7 @@ Line Number Reporting: ✅ Implemented
 ### Immediate (Optional)
 
 1. **Fix Markdown Linting Warnings** (cosmetic only)
+
    ```bash
    cd /home/username/anthonyware
    chmod +x scripts/fix-markdown-lint.sh
@@ -178,6 +190,7 @@ Line Number Reporting: ✅ Implemented
 ### Before Production Deployment
 
 1. **Test in VM**
+
    ```bash
    # Test successful installation
    ./install-anthonyware.sh
@@ -195,6 +208,7 @@ Line Number Reporting: ✅ Implemented
    - Test that line numbers are accurate
 
 3. **Verify Cleanup**
+
    ```bash
    # After failed install, verify:
    mount | grep /mnt  # Should be empty
@@ -218,6 +232,7 @@ Line Number Reporting: ✅ Implemented
 ## Commands Reference
 
 ### Verify Code Quality
+
 ```bash
 # Check for shell script errors
 bash -n install-anthonyware.sh
@@ -230,6 +245,7 @@ for script in scripts/*.sh; do bash -n "$script" || echo "Error in $script"; don
 ```
 
 ### Fix Markdown Linting
+
 ```bash
 # Auto-fix markdown issues
 ./scripts/fix-markdown-lint.sh
@@ -239,6 +255,7 @@ for script in scripts/*.sh; do bash -n "$script" || echo "Error in $script"; don
 ```
 
 ### Test Error Handling
+
 ```bash
 # Test with invalid disk
 DISK=/dev/fake ./install-anthonyware.sh
@@ -255,7 +272,7 @@ DISK=/dev/fake ./install-anthonyware.sh
 ## Summary Statistics
 
 | Metric | Value |
-|--------|-------|
+| -------- | ------- |
 | Shell Scripts Validated | 48 |
 | Shell Script Errors Found | 0 |
 | Lines of Error Handling Added | 300+ |
@@ -298,4 +315,4 @@ DISK=/dev/fake ./install-anthonyware.sh
 
 **Generated**: $(date)
 
-**Repository**: https://github.com/rockandrollprophet/anthonyware
+**Repository**: <https://github.com/rockandrollprophet/anthonyware>

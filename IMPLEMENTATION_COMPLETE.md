@@ -45,6 +45,7 @@ sudo ./install-anthonyware.sh
 - Reboots into configured system
 
 **Usage**:
+
 ```bash
 sudo ./install-anthonyware.sh
 ```
@@ -91,36 +92,43 @@ sudo ./install-anthonyware.sh
 **Files in `scripts/`:**
 
 1. **health-dashboard.sh** — Quick system health check
+
    ```bash
    health-dashboard
    ```
 
 2. **validate-configs.sh** — Verify all configs are present
+
    ```bash
    validate-configs
    ```
 
 3. **welcome.sh** — Post-install welcome screen
+
    ```bash
    welcome
    ```
 
 4. **first-boot-wizard.sh** — Interactive setup wizard
+
    ```bash
    first-boot-wizard
    ```
 
 5. **create-baseline-snapshot.sh** — Create recovery point
+
    ```bash
    create-baseline-snapshot
    ```
 
 6. **rollback-to-factory.sh** — Restore from snapshot
+
    ```bash
    rollback-to-factory
    ```
 
 7. **rollback-configs.sh** — Restore backed-up configs
+
    ```bash
    rollback-configs
    ```
@@ -166,7 +174,7 @@ Automatic testing on every push/PR:
 
 ## Installation Flow
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │ Arch Linux ISO - Boot & Network                             │
 └────────────────────┬────────────────────────────────────────┘
@@ -232,7 +240,7 @@ Automatic testing on every push/PR:
 
 ### Install Scripts (38 total)
 
-```
+```text
 install/
 ├── 00-preflight-checks.sh
 ├── 01-base-system.sh
@@ -281,7 +289,7 @@ install/
 
 ### Utility Scripts (20 total)
 
-```
+```text
 scripts/
 ├── health-dashboard.sh            ← NEW
 ├── validate-configs.sh            ← NEW
@@ -306,7 +314,7 @@ scripts/
 
 ### Configuration Files (10+ directories)
 
-```
+```text
 configs/
 ├── hypr/              → ~/.config/hypr/
 ├── hyprlock/          → ~/.config/hyprlock/
@@ -336,7 +344,7 @@ configs/
 
 ### Documentation (10+ files)
 
-```
+```text
 ├── README.md
 ├── QUICK_START.md                 ← Updated for new architecture
 ├── INSTALLATION_GUIDE.md          ← NEW (200+ lines)
@@ -352,7 +360,7 @@ configs/
 
 ### CI/CD
 
-```
+```text
 .github/
 └── workflows/
     └── ci.yml                     ← NEW (GitHub Actions)
@@ -360,7 +368,7 @@ configs/
 
 ### Root Installer
 
-```
+```text
 install-anthonyware.sh             ← NEW (Master installer)
 ```
 
@@ -448,12 +456,14 @@ create-baseline-snapshot  # Create recovery point
 ### Before First Production Deployment
 
 1. **Boot Test** — Verify system boots from ISO
+
    ```bash
    # Boot Arch ISO
    ping arch.org  # verify network
    ```
 
 2. **Repository Clone** — Verify repo clones correctly
+
    ```bash
    git clone https://github.com/YOURNAME/anthonyware
    cd anthonyware
@@ -461,6 +471,7 @@ create-baseline-snapshot  # Create recovery point
    ```
 
 3. **Script Validation** — Check scripts are executable
+
    ```bash
    bash -n install/*.sh  # syntax check
    bash -n scripts/*.sh
@@ -478,6 +489,7 @@ create-baseline-snapshot  # Create recovery point
    - Verify system boots and is fully configured
 
 6. **First User Test** — Create test user account
+
    ```bash
    useradd -m testuser
    su - testuser
@@ -506,6 +518,7 @@ cat ~/anthonyware-logs/*.log | grep -i error
 ### Immediate (This Week)
 
 1. ✅ **Commit to Git**
+
    ```bash
    git add .
    git commit -m "Anthonyware OS 1.0 complete - production ready"
@@ -523,31 +536,31 @@ cat ~/anthonyware-logs/*.log | grep -i error
 
 ### Week 1
 
-4. **Manual Testing**
+1. **Manual Testing**
    - Test in VM (VMware, VirtualBox, Hyper-V)
    - Boot fresh Arch ISO
    - Run `sudo ./install-anthonyware.sh`
    - Verify system is fully configured
 
-5. **Real Hardware** (optional but recommended)
+2. **Real Hardware** (optional but recommended)
    - Test on actual machine if available
    - Verify GPU detection and driver loading
    - Test Hyprland with real hardware
    - Verify backups work
 
-6. **Documentation Review**
+3. **Documentation Review**
    - Update GitHub URLs in install-anthonyware.sh
    - Update repository URL in INSTALLATION_GUIDE.md
    - Verify all links work
 
 ### Week 2+
 
-7. **Community Feedback** (if applicable)
+1. **Community Feedback** (if applicable)
    - Share with users
    - Collect issues
    - Iterate on improvements
 
-8. **Ongoing Maintenance**
+2. **Ongoing Maintenance**
    - Monitor GitHub Issues
    - Keep packages updated
    - Update documentation as needed
@@ -556,10 +569,10 @@ cat ~/anthonyware-logs/*.log | grep -i error
 
 ## File Locations Reference
 
-### To Find Something...
+### To Find Something
 
 | Need | Location | Command |
-|------|----------|---------|
+| ---- | -------- | ------- |
 | Installation instructions | `INSTALLATION_GUIDE.md` | read INSTALLATION_GUIDE.md |
 | Quick reference | `QUICK_START.md` | read QUICK_START.md |
 | All packages | `PACKAGE_MANIFEST.md` | grep -r "pacman\|yay\|pip" install/ |
@@ -577,7 +590,7 @@ cat ~/anthonyware-logs/*.log | grep -i error
 ## Summary Statistics
 
 | Metric | Count | Status |
-|--------|-------|--------|
+| ------ | ----- | ------ |
 | Installation Scripts | 38 | ✅ Complete |
 | New Scripts | 3 | ✅ Created |
 | Updated Scripts | 4 | ✅ Enhanced |
@@ -594,7 +607,7 @@ cat ~/anthonyware-logs/*.log | grep -i error
 
 ---
 
-## 🎉 You're Done!
+## 🎉 You're Done
 
 Anthonyware OS 1.0 is **complete, tested, documented, and ready for production**.
 
@@ -611,7 +624,7 @@ Anthonyware OS 1.0 is **complete, tested, documented, and ready for production**
 ✅ Recovery and rollback systems  
 ✅ User-friendly utilities  
 
-**Next action**: 
+**Next action**:
 
 ```bash
 sudo ./install-anthonyware.sh

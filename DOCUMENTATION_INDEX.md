@@ -279,21 +279,21 @@ Contains: Item-by-item breakdown, script inventory, special cases
 
 ## 🔗 CROSS-REFERENCES
 
-**Qt6 Runtime (NEW)**
+### Qt6 Runtime (NEW)
 
 - Definition: QUICK_START.md → VALIDATION_SUMMARY.md → PACKAGE_VALIDATION_REPORT.md
 - Script: install/02-qt6-runtime.sh
 - Config: /etc/sddm.conf.d/10-qt6-env.conf
 - Checklist: PACKAGE_MANIFEST.md (section 1)
 
-**Jupyter Ecosystem (UPDATED)**
+### Jupyter Ecosystem (UPDATED)
 
 - Definition: QUICK_START.md → VALIDATION_SUMMARY.md
 - Script: install/06-ai-ml.sh
 - Packages: 12 total (5 pacman + 7 pip)
 - Checklist: PACKAGE_MANIFEST.md (section 4)
 
-**Webcam Tools (NEW)**
+### Webcam Tools (NEW)
 
 - Definition: VALIDATION_SUMMARY.md → PACKAGE_VALIDATION_REPORT.md
 - Script: install/10-webcam-media.sh

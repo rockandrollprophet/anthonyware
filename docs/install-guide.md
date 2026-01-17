@@ -59,9 +59,9 @@ The automated installer handles partitioning, base system installation, configur
    ```
 
 7. **Follow Interactive Prompts**
-   
+
    The installer will prompt you for:
-   
+
    | Prompt | Default | Description |
    | -------- | --------- | ------------- |
    | **Target disk** | `/dev/nvme0n1` | ⚠️ Will be completely wiped |
@@ -70,7 +70,7 @@ The automated installer handles partitioning, base system installation, configur
    | **User password** | _(required)_ | Password for login and sudo commands |
    | **Root password** | _(required)_ | Root account password |
    | **Repository URL** | `rockandrollprophet/anthonyware` | Git repo to clone |
-   
+
    **Security Notes:**
    - Passwords require confirmation (entered twice)
    - All passwords must be non-empty
@@ -78,7 +78,7 @@ The automated installer handles partitioning, base system installation, configur
    - Sudo requires password after installation completes
 
 8. **Reboot**
-   
+
    After installation completes, reboot into your new system:
 
    ```bash
@@ -86,7 +86,7 @@ The automated installer handles partitioning, base system installation, configur
    ```
 
 9. **First Boot**
-   
+
    Login with your username and run the first-boot wizard:
 
    ```bash

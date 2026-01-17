@@ -43,7 +43,6 @@ foreach ($file in $markdownFiles) {
     # Split into lines for more complex operations
     $lines = $content -split "`r?`n"
     $newLines = @()
-    $modified = $false
     
     for ($i = 0; $i -lt $lines.Count; $i++) {
         $line = $lines[$i]
@@ -54,7 +53,6 @@ foreach ($file in $markdownFiles) {
         if ($line -match '^#{1,6} ' -and $i -gt 0 -and $prevLine.Trim() -ne "" -and $prevLine -notmatch '^-+$') {
             if ($newLines.Count -gt 0 -and $newLines[$newLines.Count - 1] -ne "") {
                 $newLines += ""
-                $modified = $true
             }
         }
         
@@ -66,7 +64,6 @@ foreach ($file in $markdownFiles) {
                 $peek = $lines[$i + 1]
                 if ($peek -ne "") {
                     $newLines += ""
-                    $modified = $true
                 }
             }
         }
@@ -80,7 +77,6 @@ foreach ($file in $markdownFiles) {
                     $newLines = $newLines[0..($newLines.Count - 2)]
                     if ($newLines[$newLines.Count - 1] -ne "") {
                         $newLines += ""
-                        $modified = $true
                     }
                     $newLines += $line
                 }
@@ -92,7 +88,6 @@ foreach ($file in $markdownFiles) {
             # This is closing fence, add blank after if next line isn't blank
             if ($nextLine.Trim() -ne "") {
                 $newLines += ""
-                $modified = $true
             }
         }
         
@@ -104,7 +99,6 @@ foreach ($file in $markdownFiles) {
                     $newLines = $newLines[0..($newLines.Count - 2)]
                     $newLines += ""
                     $newLines += $line
-                    $modified = $true
                 }
             }
         }

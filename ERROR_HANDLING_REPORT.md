@@ -30,6 +30,7 @@ trap 'echo "Installation interrupted. Cleaning up..."; cleanup; exit 130' INT TE
 ```
 
 **What this does:**
+
 - `set -euo pipefail`: Fail on any error, undefined variables, or pipeline failures
 - `trap 'error_handler $LINENO' ERR`: Catch all errors and show line numbers
 - `trap cleanup EXIT`: Always run cleanup when script exits
@@ -70,6 +71,7 @@ error_handler() {
 ### 2.1 Partitioning Section
 
 **Enhancements:**
+
 - ✅ Verify disk exists before partitioning
 - ✅ Check if disk is mounted (fail if mounted)
 - ✅ Detect partition naming scheme (nvme vs sd)
@@ -77,6 +79,7 @@ error_handler() {
 - ✅ Clear error messages for each failure mode
 
 **Example:**
+
 ```bash
 if ! lsblk "$DISK" &>/dev/null; then
   echo "ERROR: Disk $DISK does not exist"
@@ -89,12 +92,14 @@ fi
 ### 2.2 Formatting Section
 
 **Enhancements:**
+
 - ✅ Explicit error checks for mkfs.fat (EFI partition)
 - ✅ Explicit error checks for mkfs.btrfs (root partition)
 - ✅ Verify filesystem creation succeeded
 - ✅ Clear error messages
 
 **Example:**
+
 ```bash
 if ! mkfs.fat -F32 "$EFI"; then
   echo "ERROR: Failed to format EFI partition"
@@ -106,12 +111,14 @@ fi
 ### 2.3 Btrfs Subvolume Creation
 
 **Enhancements:**
+
 - ✅ Per-subvolume error checking
 - ✅ Verify each subvolume was created
 - ✅ Cleanup on failure (unmount if subvolume creation fails)
 - ✅ Clear messages showing which subvolume failed
 
 **Example:**
+
 ```bash
 echo "Creating @home subvolume..."
 if ! btrfs subvolume create /mnt/@home; then
@@ -124,12 +131,14 @@ fi
 ### 2.4 Mounting Section
 
 **Enhancements:**
+
 - ✅ Per-mount error checking
 - ✅ Verify each mount succeeded with `mountpoint -q`
 - ✅ Validate all critical mount points before continuing
 - ✅ Clear messages showing which mount failed
 
 **Example:**
+
 ```bash
 if ! mount -o subvol=@,compress=zstd,relatime "$ROOT" /mnt; then
   echo "ERROR: Failed to mount root subvolume"
@@ -145,6 +154,7 @@ fi
 ### 2.5 Base System Installation
 
 **Enhancements:**
+
 - ✅ Network connectivity check before package installation
 - ✅ Verify pacstrap succeeded
 - ✅ Verify critical packages were installed
@@ -153,6 +163,7 @@ fi
 - ✅ Helpful error messages with recovery suggestions
 
 **Example:**
+
 ```bash
 if ! ping -c 1 archlinux.org &>/dev/null; then
   echo "ERROR: No network connectivity. Cannot install packages."
@@ -173,6 +184,7 @@ done
 ### 2.6 Chroot Configuration
 
 **Enhancements:**
+
 - ✅ Error checks for timezone setting
 - ✅ Validate locale generation
 - ✅ Verify hostname was written
@@ -186,6 +198,7 @@ done
 - ✅ Better error reporting for installation pipeline
 
 **Example:**
+
 ```bash
 if ! ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime; then
   echo "ERROR: Failed to set timezone"
@@ -212,7 +225,7 @@ fi
 All scripts in these directories have been validated:
 
 | Directory | Scripts Checked | Errors Found |
-|-----------|----------------|--------------|
+| ----------- | ---------------- | -------------- |
 | `install/` | 34 scripts | **0 errors** ✅ |
 | `scripts/` | 14 scripts | **0 errors** ✅ |
 
@@ -284,22 +297,27 @@ These scripts were already enhanced with error handling in previous phases:
 
 ### Resolution Options
 
-**Option 1: Automated Fix (Recommended)**
+#### Option 1: Automated Fix (Recommended)
+
 ```bash
 ./scripts/fix-markdown-lint.sh
 ```
 
 This script automatically fixes:
+
 - Blank lines around code blocks
 - Blank lines around headings
 - Bare URLs
 - Trailing punctuation in headings
 
-**Option 2: Manual Fix**
+#### Option 2: Manual Fix
+
 Review each file individually and address warnings
 
-**Option 3: Disable Rules**
+#### Option 3: Disable Rules
+
 Create `.markdownlint.json` to disable specific rules:
+
 ```json
 {
   "MD031": false,
@@ -309,7 +327,8 @@ Create `.markdownlint.json` to disable specific rules:
 }
 ```
 
-**Option 4: Accept Warnings**
+#### Option 4: Accept Warnings
+
 These are cosmetic only and don't affect functionality
 
 ---
@@ -319,6 +338,7 @@ These are cosmetic only and don't affect functionality
 ### Automated Validation
 
 All shell scripts pass syntax validation:
+
 ```bash
 # No shell script errors found
 shellcheck install/*.sh  # All pass
@@ -374,32 +394,39 @@ Before production use:
 ## 6. Error Handling Best Practices Implemented
 
 ### 1. Fail Fast
+
 ```bash
 set -euo pipefail
 ```
+
 - Exit immediately on errors
 - Treat undefined variables as errors
 - Fail if any command in a pipeline fails
 
 ### 2. Trap Handlers
+
 ```bash
 trap 'error_handler $LINENO' ERR
 trap cleanup EXIT
 ```
+
 - Catch errors with line numbers
 - Always run cleanup code
 
 ### 3. Explicit Validation
+
 ```bash
 if ! command; then
   echo "ERROR: Descriptive message"
   exit 1
 fi
 ```
+
 - Check every critical operation
 - Provide helpful error messages
 
 ### 4. Defensive Programming
+
 ```bash
 # Verify state before proceeding
 if [[ ! -f /expected/file ]]; then
@@ -407,22 +434,27 @@ if [[ ! -f /expected/file ]]; then
   exit 1
 fi
 ```
+
 - Validate assumptions
 - Check pre-conditions
 
 ### 5. Graceful Degradation
+
 ```bash
 optional_command || true
 ```
+
 - Allow non-critical operations to fail
 - Continue when appropriate
 
 ### 6. Helpful Error Messages
+
 ```bash
 echo "ERROR: Network connectivity check failed"
 echo "       Cannot install packages without network access"
 echo "       Check your connection: ip addr show"
 ```
+
 - Explain what failed
 - Explain why it matters
 - Provide troubleshooting hints
@@ -440,22 +472,26 @@ echo "       Check your connection: ip addr show"
 ### Optional Enhancements
 
 1. **Logging**: Add timestamps and log levels to all output
+
    ```bash
    log() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"; }
    log "Starting installation..."
    ```
 
 2. **Progress tracking**: Add percentage completion indicators
+
    ```bash
    echo "[25%] Partitioning complete..."
    ```
 
 3. **Retry logic**: Add retry capability for network operations
+
    ```bash
    retry 3 5 pacstrap -K /mnt base
    ```
 
 4. **State persistence**: Save state between sections for resume capability
+
    ```bash
    echo "partitioning_complete" > /tmp/install.state
    ```
@@ -463,6 +499,7 @@ echo "       Check your connection: ip addr show"
 ### Monitoring
 
 After deployment, monitor for:
+
 - Installation failures in the wild
 - Common error patterns
 - User-reported issues
@@ -483,7 +520,7 @@ After deployment, monitor for:
 ### 📊 Code Quality Status
 
 | Aspect | Status | Notes |
-|--------|--------|-------|
+| -------- | -------- | ------- |
 | Shell Script Syntax | ✅ **Perfect** | 0 errors found |
 | Error Handling | ✅ **Complete** | All critical sections covered |
 | Trap Handlers | ✅ **Implemented** | ERR, EXIT, INT, TERM |
@@ -533,6 +570,7 @@ Use this checklist when writing new installer scripts:
 ## Appendix B: Quick Reference
 
 ### Check for Errors
+
 ```bash
 # Check specific file
 bash -n /path/to/script.sh
@@ -545,6 +583,7 @@ for script in install/*.sh; do bash -n "$script"; done
 ```
 
 ### Run Markdown Linter
+
 ```bash
 # Auto-fix common issues
 ./scripts/fix-markdown-lint.sh
@@ -554,6 +593,7 @@ markdownlint '**/*.md'
 ```
 
 ### Test Error Handling
+
 ```bash
 # Simulate disk not found
 DISK=/dev/fake ./install-anthonyware.sh
@@ -571,6 +611,6 @@ DISK=/dev/fake ./install-anthonyware.sh
 
 **Report Generated**: $(date)
 
-**Repository**: https://github.com/rockandrollprophet/anthonyware
+**Repository**: <https://github.com/rockandrollprophet/anthonyware>
 
 **Status**: ✅ Production Ready

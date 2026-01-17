@@ -90,7 +90,7 @@ sudo ./install-anthonyware.sh
 
 #### Step 3: Answer Prompts
 
-```
+```text
 Target disk [/dev/nvme0n1]: 
 Hostname [anthonyware]: 
 Username [rockandrollprophet]: 
@@ -243,7 +243,7 @@ backup-system
 
 ### Installation Pipeline
 
-```
+```text
 install-anthonyware.sh (master entrypoint)
     ↓
 Disk partitioning (Btrfs with subvolumes)
@@ -272,7 +272,7 @@ Ready for use
 
 ### Directory Structure
 
-```
+```text
 anthonyware/
 ├── install-anthonyware.sh    ← Master installer
 ├── install/                  ← Installation scripts
@@ -394,11 +394,13 @@ GitHub Actions (`,.github/workflows/ci.yml`) automatically:
 ### Installation Fails
 
 Check logs:
+
 ```bash
 tail -f ~/anthonyware-logs/*.log
 ```
 
 Common issues:
+
 - **Network**: `ping arch.org` or check wifi
 - **Disk space**: `df -h /` should show 30+ GB free
 - **AUR packages**: Some may fail gracefully; non-critical
@@ -418,12 +420,14 @@ $ rollback-configs
 ### GPU Issues
 
 Check GPU detection:
+
 ```bash
 lspci | grep -i "vga\|gpu\|3d"
 nvidia-smi              # If NVIDIA
 ```
 
 Install specific driver if needed:
+
 ```bash
 sudo bash install/02-gpu-drivers.sh
 ```
@@ -490,6 +494,7 @@ DRY_RUN=1 bash install/run-all.sh
 ```
 
 This will:
+
 - Skip `pacman -Syu` and package installs
 - Skip config deployments
 - Skip system modifications
@@ -679,7 +684,7 @@ journalctl -xe
 ### GitHub Issues
 
 For bugs or feature requests:
-https://github.com/YOURNAME/anthonyware/issues
+<https://github.com/YOURNAME/anthonyware/issues>
 
 ---
 
@@ -688,6 +693,7 @@ https://github.com/YOURNAME/anthonyware/issues
 Anthonyware OS is provided as-is for personal and educational use.
 
 Third-party software licenses apply:
+
 - Arch Linux: GPL
 - Hyprland: BSD-3-Clause
 - Other tools: See their respective licenses

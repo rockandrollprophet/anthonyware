@@ -1,4 +1,5 @@
 # VALIDATION COMPLETE ✅
+
 ## Anthonyware Repository — Master Package List Compliance
 
 **Date:** January 14, 2026  
@@ -11,6 +12,7 @@
 ## WHAT WAS COMPLETED
 
 ### ✅ Created 5 New Installation Scripts
+
 1. **02-qt6-runtime.sh** — Qt6 hardening + SDDM environment
 2. **10-webcam-media.sh** — Webcam tooling (v4l-utils, ffmpeg, cheese, guvcview)
 3. **32-latex-docs.sh** — LaTeX + PDF tools (texlive-most, biber, pandoc, zathura)
@@ -18,12 +20,14 @@
 5. **35-fusion360-runtime.sh** — WINE/Bottles stack (wine, vkd3d, dxvk-bin, fusion360-bin)
 
 ### ✅ Updated 4 Existing Scripts
+
 1. **03-hyprland.sh** — Added wlr-randr (pacman) + wdisplays (AUR)
 2. **06-ai-ml.sh** — Added Python/Jupyter packages (ipykernel, nbformat, nbconvert, ipywidgets) + 7 Jupyter extensions
 3. **13-fonts.sh** — Added noto-fonts-cjk + papirus-icon-theme
 4. **run-all.sh** — Integrated all new scripts in correct sequence
 
 ### ✅ Fixed 1 Naming Conflict
+
 - **36-xwayland-legacy.sh** — Renumbered from 32 to avoid collision with latex-docs, added to run-all.sh
 
 ---
@@ -31,10 +35,12 @@
 ## PACKAGE COVERAGE
 
 ### Pacman Packages: ✅ 200+
+
 **All core system, networking, GPU, Qt6, Hyprland, development, AI/ML, CAD, electrical engineering, security, backup, audio, power, diagnostics, fonts, and color management packages are present.**
 
 ### AUR Packages: ✅ 38
-```
+
+```text
 eww-wayland, swaync, wdisplays, qpwgraph, displaycal, spnavcfg
 alienfx, awcc-linux, dell-bios-fan-control, nbfc-linux
 fusion360-bin, candle, universal-gcode-sender-bin, bcnc, openbuilds-control-bin
@@ -47,7 +53,8 @@ grimblast-git, hyprpicker, ltspice, scpi-tools
 ```
 
 ### Pip Packages: ✅ 22
-```
+
+```text
 torch, torchvision, torchaudio
 tensorflow==2.15, tensorflow-io-gcs-filesystem
 transformers, accelerate, datasets, tokenizers, bitsandbytes, optimum
@@ -61,7 +68,7 @@ jupyterlab_execute_time, jupyter_http_over_ws
 
 ## INSTALLATION SEQUENCE (38 Scripts)
 
-```
+```text
 Core System ➜ GPU Drivers ➜ Qt6 + Hyprland ➜ Daily Driver Apps ➜
 Development ➜ AI/ML ➜ CAD/CNC ➜ Hardware ➜ Security ➜ Backups ➜
 Webcam ➜ VFIO/Virtualization ➜ Printing ➜ Fonts ➜ Portals ➜
@@ -77,37 +84,45 @@ XWayland Legacy ➜ Final Update
 ## VALIDATION RESULTS
 
 ### ✅ Section 1: Qt6 Runtime
+
 - [x] All 9 Qt6 packages in 02-qt6-runtime.sh
 - [x] SDDM environment config created
 - [x] Script in run-all.sh at position #3
 
 ### ✅ Section 2: Hyprland + Multi-Monitor
+
 - [x] wlr-randr in pacman block
 - [x] wdisplays in AUR block
 - [x] Integrated into 03-hyprland.sh
 
 ### ✅ Section 3: Webcam + Media
+
 - [x] All 4 packages in 10-webcam-media.sh
 - [x] Script in run-all.sh at position #12
 
 ### ✅ Section 4: Jupyter Ecosystem
+
 - [x] 5 repo packages in 06-ai-ml.sh
 - [x] 7 pip packages in 06-ai-ml.sh
 - [x] All extensions present
 
 ### ✅ Section 5: LaTeX + Docs
+
 - [x] All 5 packages in 32-latex-docs.sh
 - [x] Script in run-all.sh at position #33
 
 ### ✅ Section 6: Diagnostics
+
 - [x] All 4 packages in 34-diagnostics.sh
 - [x] Script in run-all.sh at position #35
 
 ### ✅ Section 7: Fonts + Icons
+
 - [x] noto-fonts-cjk in 13-fonts.sh
 - [x] papirus-icon-theme in 13-fonts.sh
 
 ### ✅ Section 8: Fusion 360 Runtime
+
 - [x] WINE stack in 35-fusion360-runtime.sh
 - [x] All AUR packages present
 - [x] Script in run-all.sh at position #37
@@ -117,10 +132,13 @@ XWayland Legacy ➜ Final Update
 ## DOCUMENTS CREATED
 
 ### 1. **PACKAGE_VALIDATION_REPORT.md**
+
 Comprehensive audit of all packages across pacman, AUR, and pip, with detailed breakdown by script and category. Includes verification of execution order, dependency validation, and special case notes.
 
 ### 2. **PACKAGE_MANIFEST.md**
+
 Master checklist of all 260+ packages with checkbox system. Useful for:
+
 - Installing individual sections
 - Auditing completeness
 - Planning future expansions
@@ -131,6 +149,7 @@ Master checklist of all 260+ packages with checkbox system. Useful for:
 ## HOW TO VERIFY YOURSELF
 
 ### Method 1: Quick Count
+
 ```bash
 cd install
 grep -h "pacman -S\|yay -S\|pip install" *.sh | \
@@ -140,6 +159,7 @@ grep -h "pacman -S\|yay -S\|pip install" *.sh | \
 ```
 
 ### Method 2: Check Specific Categories
+
 ```bash
 # Qt6
 grep -c "qt6-" install/*.sh  # Should find 9 instances
@@ -152,6 +172,7 @@ grep -c "v4l-utils\|guvcview\|cheese" install/*.sh  # Should find 4 instances
 ```
 
 ### Method 3: Validate run-all.sh
+
 ```bash
 grep "\.sh" install/run-all.sh | wc -l  # Should be 38
 
@@ -185,7 +206,7 @@ done
 ## KEY FILES
 
 | File | Purpose |
-|------|---------|
+| -------- | -------- |
 | [install/02-qt6-runtime.sh](install/02-qt6-runtime.sh) | Qt6 hardening |
 | [install/03-hyprland.sh](install/03-hyprland.sh) | Hyprland + wlr-randr/wdisplays |
 | [install/06-ai-ml.sh](install/06-ai-ml.sh) | AI/ML + Jupyter ecosystem |

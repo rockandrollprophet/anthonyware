@@ -76,12 +76,12 @@ This document provides step-by-step procedures for recovering from common system
 
 ## Kernel Panics
 
-### Symptoms
+### Symptoms (Kernel Panics)
 
 - System crashes with kernel panic message
 - Unable to boot into installed system
 
-### Recovery Steps
+### Recovery Steps (Kernel Panics)
 
 1. **Boot from Previous Kernel**
    - At GRUB menu, select "Advanced options"
@@ -269,12 +269,12 @@ This document provides step-by-step procedures for recovering from common system
 
 ## Pacman Database Corruption
 
-### Symptoms
+### Symptoms (Pacman Database)
 
 - `error: failed to init transaction (unable to lock database)`
 - `error: could not open file: No such file or directory`
 
-### Recovery Steps
+### Recovery Steps (Pacman Database)
 
 1. **Remove Lock File**
 

@@ -103,6 +103,7 @@ Six comprehensive diagnostic and repair tools:
 ### 3. Enhanced Install Pipeline
 
 **[install/run-all.sh](install/run-all.sh) Improvements:**
+
 - ✅ Retry logic for network-dependent operations (3 attempts, 5-second delay)
 - ✅ Checkpoint system to resume after failures
 - ✅ Enhanced logging with timestamps and severity levels
@@ -110,6 +111,7 @@ Six comprehensive diagnostic and repair tools:
 - ✅ Structured log output (`~/anthonyware-logs/`)
 
 **Error Handling:**
+
 - Critical scripts (`00-preflight`, `01-base-system`, `03-hyprland`) halt installation on failure
 - Non-critical scripts continue with warnings
 - All attempts logged for debugging
@@ -119,7 +121,9 @@ Six comprehensive diagnostic and repair tools:
 ### 4. Production Hardening
 
 #### [scripts/enable-security.sh](scripts/enable-security.sh)
+
 Activates security frameworks post-installation:
+
 - ✅ Firewalld with custom zone deployment
 - ✅ AppArmor profile activation
 - ✅ Firejail sandboxing profiles
@@ -128,7 +132,9 @@ Activates security frameworks post-installation:
 - ✅ Optional: Enable audit logging
 
 #### [scripts/pre-update-snapshot.sh](scripts/pre-update-snapshot.sh)
+
 Safety net before system updates:
+
 - ✅ Auto-detects Btrfs filesystem
 - ✅ Supports Timeshift and Snapper
 - ✅ Creates pre-update snapshot
@@ -136,7 +142,9 @@ Safety net before system updates:
 - ✅ Runs system update after snapshot
 
 #### [docs/recovery-procedures.md](docs/recovery-procedures.md)
+
 Comprehensive recovery guide covering:
+
 - Boot failures and GRUB repair
 - Kernel panics and rollback
 - GPU driver issues (NVIDIA/AMD)
@@ -152,7 +160,9 @@ Comprehensive recovery guide covering:
 ### 5. Configuration Management
 
 #### [scripts/config-diff.sh](scripts/config-diff.sh)
+
 Interactive configuration management tool:
+
 - ✅ Show status of all configs (synced/modified/missing)
 - ✅ View detailed diffs between deployed and repository versions
 - ✅ Restore configs from repository (with backup)
@@ -160,6 +170,7 @@ Interactive configuration management tool:
 - ✅ Compare all configs in one view
 
 **Tracked Configurations:**
+
 - Hyprland (hyprland.conf, hyprlock.conf, hyprpaper.conf)
 - Waybar (config.jsonc, style.css)
 - Kitty, Mako, Wofi, SwayNC
@@ -170,7 +181,9 @@ Interactive configuration management tool:
 ### 6. First-Boot Experience
 
 #### [scripts/first-boot-wizard.sh](scripts/first-boot-wizard.sh)
+
 Enhanced post-install wizard:
+
 - ✅ System information display
 - ✅ Sudo access verification
 - ✅ Critical service status checks
@@ -187,7 +200,9 @@ Enhanced post-install wizard:
 ### 7. Installation Security
 
 #### [install-anthonyware.sh](install-anthonyware.sh)
+
 Secure credential handling:
+
 - ✅ Interactive username prompt (no defaults)
 - ✅ Password confirmation for user and root
 - ✅ Non-empty validation
@@ -202,6 +217,7 @@ Secure credential handling:
 ### Total Packages: 260+
 
 **Categories:**
+
 - Base system & kernel
 - Hyprland desktop environment
 - Daily driver apps (Dolphin, VLC, GIMP, LibreOffice, etc.)
@@ -221,17 +237,20 @@ Secure credential handling:
 ## 🔧 Available Scripts
 
 ### Installation
+
 - `install-anthonyware.sh` - Main installer
 - `pre-install-check.sh` - Pre-flight validation
 - `install/run-all.sh` - Pipeline orchestrator
 
 ### Maintenance
+
 - `update-everything.sh` - Full system update
 - `maintenance.sh` - System health maintenance
 - `backup-system.sh` / `backup-home.sh` - Backup tools
 - `pre-update-snapshot.sh` - Safe update wrapper
 
 ### Troubleshooting
+
 - `troubleshoot-audio.sh` - Audio diagnostics
 - `troubleshoot-gpu.sh` - GPU diagnostics
 - `troubleshoot-network.sh` - Network diagnostics
@@ -240,12 +259,14 @@ Secure credential handling:
 - `service-manager.sh` - Service management TUI
 
 ### Configuration
+
 - `config-diff.sh` - Config comparison tool
 - `validate-configs.sh` - Config validator
 - `enable-security.sh` - Security hardening
 - `first-boot-wizard.sh` - Post-install wizard
 
 ### System
+
 - `enable-sddm.sh` / `enable-plymouth.sh` - Display manager/boot splash
 - `enable-visualizer.sh` - Desktop visualizer (eww + cava)
 - `gpu-check.sh` - GPU information
@@ -256,6 +277,7 @@ Secure credential handling:
 ## 📚 Documentation
 
 ### User Guides
+
 - [README.md](README.md) - Project overview
 - [QUICK_INSTALL.md](QUICK_INSTALL.md) - Fast installation guide
 - [docs/install-guide.md](docs/install-guide.md) - Comprehensive install guide
@@ -263,6 +285,7 @@ Secure credential handling:
 - [docs/recovery-procedures.md](docs/recovery-procedures.md) - Emergency recovery
 
 ### Workflow Guides
+
 - [docs/workflow-daily-driver.md](docs/workflow-daily-driver.md)
 - [docs/workflow-cad.md](docs/workflow-cad.md)
 - [docs/workflow-cnc.md](docs/workflow-cnc.md)
@@ -272,11 +295,13 @@ Secure credential handling:
 - [docs/workflow-backups.md](docs/workflow-backups.md)
 
 ### Technical Docs
+
 - [docs/security-hardening.md](docs/security-hardening.md)
 - [docs/update-strategy.md](docs/update-strategy.md)
 - [docs/branding-guide.md](docs/branding-guide.md)
 
 ### VM/VFIO
+
 - [vm/vfio-setup.md](vm/vfio-setup.md)
 - [vm/gpu-passthrough-checklist.md](vm/gpu-passthrough-checklist.md)
 - [vm/touchdesigner-setup.md](vm/touchdesigner-setup.md)
@@ -315,6 +340,7 @@ sudo ./install-anthonyware.sh
 ## ✨ Key Features
 
 ### Plug-and-Play
+
 - ✅ Single-command installation from ISO
 - ✅ Interactive credential prompts (secure)
 - ✅ Automatic hardware detection
@@ -322,13 +348,15 @@ sudo ./install-anthonyware.sh
 - ✅ Checkpoint system for resume
 
 ### Production-Ready
+
 - ✅ 260+ packages covering all workflows
 - ✅ Complete multimedia codec support
 - ✅ GPU drivers for NVIDIA/AMD/Intel
 - ✅ Security frameworks (optional activation)
 - ✅ Comprehensive error handling
 
-### Troubleshooting
+### Troubleshooting & Recovery
+
 - ✅ 6 dedicated diagnostic scripts
 - ✅ Interactive service manager
 - ✅ Package repair tools
@@ -336,12 +364,14 @@ sudo ./install-anthonyware.sh
 - ✅ Detailed recovery procedures
 
 ### Safety
+
 - ✅ Btrfs snapshots before updates
 - ✅ Backup scripts for system/home
 - ✅ Recovery procedures documented
 - ✅ Rollback mechanisms
 
 ### Workflows
+
 - ✅ Daily driver (office, web, media)
 - ✅ Software development (Python, Node, Docker, etc.)
 - ✅ AI/ML (PyTorch, TensorFlow, CUDA)
@@ -355,12 +385,14 @@ sudo ./install-anthonyware.sh
 ## 🔐 Security Posture
 
 **Development Mode (Default):**
+
 - Firewalld: Enabled, permissive rules (SSH, KDE Connect, Syncthing, mDNS)
 - AppArmor: Profiles present, commented out
 - Firejail: Profiles present, commented out
 
 **Production Mode:**
 Run `~/anthonyware/scripts/enable-security.sh` to activate:
+
 - Firewalld: Custom anthonyware zone
 - AppArmor: Enforce profiles for browsers, file managers
 - Firejail: Sandboxing for untrusted applications
@@ -371,6 +403,7 @@ Run `~/anthonyware/scripts/enable-security.sh` to activate:
 ## 🎯 System Requirements
 
 ### Minimum
+
 - CPU: x86_64
 - RAM: 4GB
 - Disk: 30GB free
@@ -378,6 +411,7 @@ Run `~/anthonyware/scripts/enable-security.sh` to activate:
 - Network: Internet connection required
 
 ### Recommended
+
 - CPU: Quad-core with virtualization
 - RAM: 8GB+
 - Disk: 50GB+ NVMe SSD
@@ -407,9 +441,9 @@ Before deploying to production, verify:
 
 ## 📞 Support
 
-- GitHub Issues: https://github.com/rockandrollprophet/anthonyware/issues
-- Arch Wiki: https://wiki.archlinux.org
-- Hyprland Docs: https://wiki.hyprland.org
+- GitHub Issues: <https://github.com/rockandrollprophet/anthonyware/issues>
+- Arch Wiki: <https://wiki.archlinux.org>
+- Hyprland Docs: <https://wiki.hyprland.org>
 
 ---
 

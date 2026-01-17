@@ -18,7 +18,7 @@ This guide walks you through creating a **production-ready USB installer** for A
 ### In the Repository
 
 | File | Purpose |
-|------|---------|
+| -------- | --------- |
 | `run-from-usb.sh` | Entry point for USB installation |
 | `usb/autorun.service` | systemd service for autorun |
 | `usb/anthonyware-usb-autorun` | Autorun binary with safety lock |
@@ -31,7 +31,7 @@ This guide walks you through creating a **production-ready USB installer** for A
 
 ## USB Layout
 
-```
+```text
 USB/
 ├── archlinux.iso              (Arch Linux ISO)
 ├── ventoy/                    (Ventoy files, if using Ventoy)
@@ -59,6 +59,7 @@ USB/
 ### Step 1: Prepare the USB with Ventoy
 
 Ventoy is the cleanest way to create a multiboot USB. It lets you:
+
 - Boot multiple ISOs without rewriting the USB
 - Keep persistent storage for your repo
 - Add custom boot configurations
@@ -74,6 +75,7 @@ sudo bash Ventoy2Disk.sh -i /dev/sdX
 ```
 
 This creates:
+
 - A boot partition with Ventoy
 - A data partition for files
 
@@ -97,7 +99,8 @@ sudo umount /mnt/usb
 ```
 
 Result:
-```
+
+```text
 /mnt/usb/
 ├── archlinux-2024.01.01-x86_64.iso
 └── anthonyware/               (full repo)
@@ -156,6 +159,7 @@ sudo reboot
 ```
 
 The system will:
+
 1. Boot Arch ISO
 2. Load live environment
 3. Autorun service starts
@@ -276,6 +280,7 @@ bash scripts/usb-integrity-check.sh
 ```
 
 This verifies:
+
 - ✓ All required files present
 - ✓ Git repository valid
 - ✓ Working tree clean
@@ -291,6 +296,7 @@ DRY_RUN=1 bash ./run-from-usb.sh
 ```
 
 This will:
+
 - Skip pacman operations
 - Skip filesystem modifications
 - Skip config deployments
@@ -316,11 +322,13 @@ touch USB_AUTORUN_ENABLED
 ### "Repository not found" - Can't find USB
 
 **Possible causes**:
+
 1. USB not mounted at boot
 2. Partition not readable
 3. Anthonyware directory in wrong location
 
 **Solution**:
+
 ```bash
 # Boot into shell (don't use autorun)
 # Manually mount and verify:
@@ -336,6 +344,7 @@ sudo ./run-from-usb.sh
 ### "Integrity check failed" - Missing files
 
 **Solution**:
+
 ```bash
 # Verify files are on USB
 cd /mnt/usb/anthonyware
@@ -348,6 +357,7 @@ cp -r ~/anthonyware /mnt/usb/
 ### "Permission denied" on autorun binary
 
 **Solution**:
+
 ```bash
 # Make scripts executable
 chmod +x usb/anthonyware-usb-autorun
@@ -363,6 +373,7 @@ chmod +x scripts/*.sh
 Ventoy provides custom boot options through `ventoy.json`:
 
 **Current config** (`usb/ventoy/ventoy.json`):
+
 ```json
 {
   "image_list": [
@@ -378,9 +389,11 @@ To customize:
 
 1. Edit `usb/ventoy/ventoy.json` in your repo
 2. Copy updated file to USB:
+
    ```bash
    cp usb/ventoy/ventoy.json /mnt/usb/ventoy/ventoy.json
    ```
+
 3. Reboot to see changes
 
 ---
@@ -456,7 +469,7 @@ sudo umount /mnt/usb
 ## Files Summary
 
 | File | Purpose | Executable |
-|------|---------|-----------|
+| -------- | --------- | ----------- |
 | `run-from-usb.sh` | USB entry point | ✓ |
 | `usb/autorun.service` | systemd service | ✗ |
 | `usb/anthonyware-usb-autorun` | Autorun binary | ✓ |

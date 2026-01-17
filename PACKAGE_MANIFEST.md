@@ -1,5 +1,6 @@
 # ANTHONYWARE PACKAGE MANIFEST
-**Master Package Checklist — All 260+ Packages**
+
+Master Package Checklist — All 260+ Packages
 
 ---
 
@@ -17,6 +18,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 ## PACMAN PACKAGES (OFFICIAL REPOS)
 
 ### Core System
+
 - [ ] base
 - [ ] base-devel
 - [ ] linux
@@ -31,6 +33,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] which
 
 ### System Utils
+
 - [ ] tree
 - [ ] zip
 - [ ] unzip
@@ -56,6 +59,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] xdg-desktop-portal-gtk
 
 ### Networking
+
 - [ ] networkmanager
 - [ ] network-manager-applet
 - [ ] plasma-nm
@@ -77,6 +81,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] nss-mdns
 
 ### GPU & Graphics
+
 - [ ] mesa
 - [ ] vulkan-radeon
 - [ ] libva-mesa-driver
@@ -100,6 +105,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] wayland
 
 ### Qt6 Runtime (FULL)
+
 - [ ] qt6-base
 - [ ] qt6-declarative
 - [ ] qt6-quickcontrols2
@@ -111,9 +117,11 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] qt6-multimedia
 
 ### Display Manager
+
 - [ ] sddm
 
 ### Hyprland Desktop
+
 - [ ] hyprland
 - [ ] waybar
 - [ ] wofi
@@ -136,6 +144,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] wlr-randr
 
 ### Daily Driver Apps
+
 - [ ] dolphin
 - [ ] dolphin-plugins
 - [ ] kio-extras
@@ -154,6 +163,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] discover
 
 ### Development Tools
+
 - [ ] git
 - [ ] git-delta
 - [ ] cmake
@@ -188,6 +198,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] fzf
 
 ### AI/ML (Pacman side)
+
 - [ ] python-numpy
 - [ ] python-scipy
 - [ ] python-pandas
@@ -204,6 +215,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] python-ipywidgets
 
 ### CAD / CNC / 3D Printing
+
 - [ ] blender
 - [ ] kicad
 - [ ] freecad
@@ -212,6 +224,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] octoprint
 
 ### Electrical Engineering / FPGA
+
 - [ ] ngspice
 - [ ] qucs-s
 - [ ] sigrok-cli
@@ -230,6 +243,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] gtkwave
 
 ### Hardware Support
+
 - [ ] spacenavd
 - [ ] libspnav
 - [ ] x11-spnav
@@ -241,6 +255,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] thermald
 
 ### Security
+
 - [ ] firewalld
 - [ ] apparmor
 - [ ] apparmor-parser
@@ -254,6 +269,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] age
 
 ### Backups
+
 - [ ] timeshift
 - [ ] timeshift-autosnap
 - [ ] btrfs-progs
@@ -266,12 +282,14 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] rclone
 
 ### Webcam / Media
+
 - [ ] v4l-utils
 - [ ] ffmpeg
 - [ ] cheese
 - [ ] guvcview
 
 ### Virtualization & VFIO
+
 - [ ] qemu-full
 - [ ] virt-manager
 - [ ] virt-viewer
@@ -287,6 +305,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] spice-vdagent
 
 ### Printing
+
 - [ ] cups
 - [ ] cups-pdf
 - [ ] system-config-printer
@@ -298,6 +317,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] gutenprint
 
 ### Fonts & Icons
+
 - [ ] noto-fonts
 - [ ] noto-fonts-extra
 - [ ] noto-fonts-emoji
@@ -310,6 +330,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] papirus-icon-theme
 
 ### Audio
+
 - [ ] pipewire
 - [ ] pipewire-alsa
 - [ ] pipewire-pulse
@@ -318,6 +339,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] helvum
 
 ### Power & Firmware
+
 - [ ] tlp
 - [ ] tlp-rdw
 - [ ] powertop
@@ -326,12 +348,14 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] fwupd
 
 ### Diagnostics
+
 - [ ] smartmontools
 - [ ] nvme-cli
 - [ ] memtest86+
 - [ ] kdump
 
 ### LaTeX & Docs
+
 - [ ] texlive-most
 - [ ] biber
 - [ ] pandoc
@@ -339,15 +363,18 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] zathura-pdf-mupdf
 
 ### Color Management
+
 - [ ] colord
 - [ ] gnome-color-manager
 - [ ] argyllcms
 
 ### Wayland Recording
+
 - [ ] wf-recorder
 - [ ] obs-vkcapture
 
 ### XWayland Legacy
+
 - [ ] xorg-xwayland
 - [ ] xclip
 - [ ] xdotool
@@ -358,6 +385,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 ## AUR PACKAGES (38 TOTAL)
 
 ### Display & Desktop
+
 - [ ] eww-wayland
 - [ ] swaync
 - [ ] grimblast-git
@@ -365,11 +393,13 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] wdisplays
 
 ### Fonts & Nerd Fonts
+
 - [ ] ttf-jetbrains-mono-nerd
 - [ ] ttf-firacode-nerd
 - [ ] visual-studio-code-bin
 
 ### CAD & 3D Printing
+
 - [ ] fusion360-bin
 - [ ] candle
 - [ ] universal-gcode-sender-bin
@@ -381,36 +411,44 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] mainsail
 - [ ] fluidd
 
-### Hardware Support
+### Hardware Support (AUR)
+
 - [ ] spnavcfg
 - [ ] alienfx
 - [ ] awcc-linux
 - [ ] dell-bios-fan-control
 - [ ] nbfc-linux
 
-### Color Management
+### Color Management (AUR)
+
 - [ ] displaycal
 
 ### Electrical Engineering
+
 - [ ] ltspice
 - [ ] scpi-tools
 
 ### Instrumentation
+
 - [ ] scpi-tools (duplicate for documentation)
 
 ### Virtualization
+
 - [ ] looking-glass-client
 
-### Audio
+### Audio (AUR)
+
 - [ ] qpwgraph
 
 ### AI/ML
+
 - [ ] text-generation-webui
 - [ ] koboldcpp
 - [ ] llama.cpp
 - [ ] oobabooga
 
 ### Fusion 360 Runtime
+
 - [ ] vkd3d-proton
 - [ ] dxvk-bin
 
@@ -419,6 +457,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 ## PIP PACKAGES (22 TOTAL)
 
 ### PyTorch & TensorFlow
+
 - [ ] torch (CUDA wheel)
 - [ ] torchvision
 - [ ] torchaudio
@@ -426,6 +465,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] tensorflow-io-gcs-filesystem
 
 ### HuggingFace & LLMs
+
 - [ ] transformers
 - [ ] accelerate
 - [ ] datasets
@@ -438,6 +478,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 - [ ] sentencepiece
 
 ### Jupyter Ecosystem
+
 - [ ] jupyterlab-lsp
 - [ ] python-lsp-server
 - [ ] jupyterlab-git
@@ -501,7 +542,7 @@ This is a **definitive record** of every package that should be in the Anthonywa
 ## KEY STATISTICS
 
 | Item | Count |
-|------|-------|
+| ------ | ------- |
 | Pacman Packages | 200+ |
 | AUR Packages | 38 |
 | Pip Packages | 22 |
