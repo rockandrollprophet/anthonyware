@@ -1,18 +1,29 @@
 # Anthonyware OS (Arch + Hyprland)
 
-A fully modular, reproducible engineering workstation built on Arch Linux and Hyprland.
+A fully modular, reproducible **graduate-level engineering and scientific computing workstation** built on Arch Linux and Hyprland.
+
+**Pre-installed**: 260+ engineering packages including CAD (Fusion 360, Blender, FreeCAD), FPGA tools (Yosys, nextpnr), AI/ML frameworks (PyTorch, TensorFlow), EE tools (KiCAD, ngspice), and more. Zero post-install setup required.
 
 This repo contains:
 
-- Install scripts
-- Config files
-- VM passthrough setup
-- Engineering tools
-- AI/ML stack
+- Install scripts (38 modular, ordered by dependency)
+- Config files (Hyprland, Kitty, Waybar, etc.)
+- VM passthrough setup (VFIO for Windows CAD tools)
+- Engineering tools (260+ packages pre-installed)
+- AI/ML stack (PyTorch, TensorFlow, JupyterLab, transformers)
 - CAD/CAM/CNC/3D printing stack
-- Electrical engineering stack
+- Electrical engineering stack (KiCAD, ngspice, logic analyzers)
+- FPGA toolchain (Yosys, nextpnr, Verilator, GHDL)
 - Security hardening
 - Backup strategy
+- Validation & diagnostics
+
+**Documentation**:
+
+- [What's pre-installed](docs/whats-preinstalled.md) — Complete engineering environment overview
+- [Engineering setup guide](docs/engineering-setup.md) — Tool-by-tool breakdown and workflows
+- [Installation guide](docs/install-guide.md) — Step-by-step install + disk partitioning (800-900GB)
+- [Workflows](docs/) — CAD, AI/ML, FPGA, VFIO, security, etc.
 
 ## Full Install
 

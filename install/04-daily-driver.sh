@@ -10,6 +10,7 @@ sudo pacman -S --noconfirm --needed \
     ark \
     vlc \
     gimp \
+    gimp-python \
     obs-studio \
     pavucontrol \
     blueman \
@@ -51,7 +52,22 @@ sudo pacman -S --noconfirm --needed \
     bluez-utils \
     pulseaudio-bluetooth \
     xdg-utils \
-    xdg-user-dirs
+    xdg-user-dirs \
+    imagemagick \
+    rawtherapee \
+    krita
+
+# Image processing CLI tools
+sudo pacman -S --noconfirm --needed \
+    optipng \
+    jpegoptim \
+    webp \
+    libwebp
+
+# Rendering and visualization (already in Blender from CAD, but adding CLI support)
+sudo pacman -S --noconfirm --needed \
+    python-pillow \
+    python-imageio
 
 # Enable printing services
 sudo systemctl enable --now cups.service
@@ -72,3 +88,9 @@ else
 fi
 
 echo "=== Daily Driver Setup Complete ==="
+echo "Graphics tools installed:"
+echo "  - GIMP: General image editing"
+echo "  - Krita: Digital painting"
+echo "  - RawTherapee: RAW photo processing"
+echo "  - ImageMagick: CLI image manipulation"
+echo "  - Blender: 3D rendering, modeling, animation (via CAD script)"

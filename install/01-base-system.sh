@@ -14,6 +14,7 @@ sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
 sudo pacman -S --noconfirm --needed \
     base-devel \
     git \
+    git-lfs \
     curl \
     wget \
     unzip \
@@ -30,7 +31,61 @@ sudo pacman -S --noconfirm --needed \
     xdg-user-dirs \
     xdg-utils \
     xdg-desktop-portal \
-    xdg-desktop-portal-gtk
+    xdg-desktop-portal-gtk \
+    pacman-contrib \
+    pkgfile \
+    expac \
+    pacutils \
+    arch-install-scripts \
+    archiso \
+    downgrade \
+    htop \
+    btop \
+    iotop \
+    nethogs \
+    lsof \
+    strace \
+    ltrace \
+    gdb \
+    valgrind \
+    perf \
+    fzf \
+    ripgrep \
+    fd \
+    bat \
+    delta \
+    jq \
+    yq \
+    bzip2 \
+    xz \
+    p7zip \
+    cmake \
+    meson \
+    ninja \
+    make \
+    pkg-config \
+    neofetch \
+    inxi \
+    zsh \
+    bash-completion \
+    nmap \
+    netcat \
+    socat \
+    iftop \
+    docker \
+    docker-compose \
+    podman \
+    btrfs-progs \
+    xfsprogs \
+    e2fsprogs \
+    dosfstools \
+    ntfs-3g \
+    exfat-utils \
+    usbutils \
+    lm_sensors \
+    mesa \
+    vulkan-tools \
+    glfw-x11
 
 # Enable NetworkManager
 sudo systemctl enable --now NetworkManager
@@ -46,6 +101,32 @@ if ! command -v yay >/dev/null; then
     makepkg -si --noconfirm
     cd -
 fi
+
+# Update pkgfile database
+sudo pkgfile --update
+
+# Install AUR tools and utilities
+yay -S --noconfirm --needed \
+    paru \
+    zoom \
+    visual-studio-code-bin \
+    lazygit \
+    gh \
+    topgrade \
+    ccache \
+    direnv \
+    asdf-vm \
+    tmux \
+    ripgrep-all \
+    sd \
+    procs \
+    hyperfine \
+    yamllint \
+    prettier \
+    shellcheck \
+    shfmt \
+    nushell \
+    watchman
 
 # Optimize mirrors
 sudo reflector --country "United States" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist

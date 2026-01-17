@@ -302,6 +302,37 @@ grub-mkconfig -o /boot/grub/grub.cfg
 - **GPU**: Dedicated GPU for Hyprland compositing
 - **Network**: Stable broadband connection
 
+### Engineering / Graduate Workload (Recommended)
+
+- **CPU**: 6+ cores (Ryzen 5 / Intel i7 or better)
+- **RAM**: 32GB or more (for large CAD models, ML workloads, VMs)
+- **Disk**: **800-900GB SSD/NVMe for Arch installation**
+  - 512MB EFI partition (`/boot`)
+  - 800-900GB Arch root partition (`/`)
+  - Remainder: Windows VM partition (if VFIO dual-boot desired)
+- **GPU**: Dedicated GPU with CUDA support (NVIDIA RTX series recommended for CUDA/AI/ML)
+- **Network**: Stable broadband for package downloads, cloud CAD (Onshape, Fusion 360), and remote tools
+
+### Partition Layout Example (Alienware m17 r5 with 1TB drive)
+
+```bash
+# Assuming /dev/nvme0n1 (1TB NVMe)
+sgdisk -Z /dev/nvme0n1                             # Wipe partition table
+sgdisk -n 1:0:+512M -t 1:ef00 /dev/nvme0n1        # EFI: 512MB
+sgdisk -n 2:0:+800G -t 2:8300 /dev/nvme0n1        # Arch: 800GB
+sgdisk -n 3:0:0 -t 3:8300 /dev/nvme0n1            # Windows VM: remaining (~188GB)
+sgdisk -p /dev/nvme0n1                             # Verify
+```
+
+**Key Points:**
+
+- Arch root partition requires **30GB minimum** for base system, but **200GB+ strongly recommended** for engineering tools (CAD, AI/ML, scientific computing, IDEs).
+- 800-900GB allocation provides room for:
+  - Base system: ~40GB
+  - Engineering tools: ~150GB
+  - User home (projects, datasets, models): ~400-700GB
+- Windows VM partition (if using VFIO for SolidWorks/Siemens NX): ~100-200GB recommended
+
 ---
 
 ## Next Steps
@@ -313,4 +344,4 @@ After installation:
 3. Explore workflow guides in `docs/`
 4. Configure apps in `configs/`
 
-Enjoy Anthonyware OS! 🚀
+Enjoy Anthonyware OS!
