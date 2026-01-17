@@ -432,9 +432,9 @@ $USERNAME:$PASSWORD
 root:$ROOT_PASSWORD
 PASSEOF
 
-# Copy password file into chroot
-cp "$PASS_FILE" /mnt/.password_temp
-chmod 600 /mnt/.password_temp
+# Copy password file into chroot (keep under /root to avoid cleanup races)
+cp "$PASS_FILE" /mnt/root/.password_temp
+chmod 600 /mnt/root/.password_temp
 
 # Run chroot configuration with comprehensive error handling
 arch-chroot /mnt /bin/bash << CHROOT_EOF
@@ -490,34 +490,40 @@ if ! useradd -m -s /bin/bash "$USERNAME" 2>/dev/null; then
   fi
 fi
 
+# Ensure vconsole exists to keep mkinitcpio happy
+if [[ ! -f /etc/vconsole.conf ]]; then
+  echo "KEYMAP=us" > /etc/vconsole.conf
+fi
+
 # Set passwords from temporary file
 echo "Setting passwords..."
-if [[ ! -f /.password_temp ]]; then
-  echo "ERROR: Password file not found at /.password_temp"
+PASS_FILE="/root/.password_temp"
+if [[ ! -f "$PASS_FILE" ]]; then
+  echo "ERROR: Password file not found at $PASS_FILE"
   exit 1
 fi
 
 echo "DEBUG: Contents of password file:"
-cat /.password_temp
+cat "$PASS_FILE"
 
 echo "Setting user password..."
-USER_PASS=$(grep "^$USERNAME:" /.password_temp | cut -d: -f2)
-if [[ -z "$USER_PASS" ]]; then
+USER_PASS=$(grep "^$USERNAME:" "$PASS_FILE" | cut -d: -f2- || true)
+if [[ -z "${USER_PASS:-}" ]]; then
   echo "ERROR: Could not extract user password from file"
   exit 1
 fi
 echo "$USER_PASS" | passwd --stdin "$USERNAME"
 
 echo "Setting root password..."
-ROOT_PASS=$(grep "^root:" /.password_temp | cut -d: -f2)
-if [[ -z "$ROOT_PASS" ]]; then
+ROOT_PASS=$(grep "^root:" "$PASS_FILE" | cut -d: -f2- || true)
+if [[ -z "${ROOT_PASS:-}" ]]; then
   echo "ERROR: Could not extract root password from file"
   exit 1
 fi
 echo "$ROOT_PASS" | passwd --stdin root
 
 # Remove password file immediately
-rm -f /.password_temp
+rm -f "$PASS_FILE"
 
 # Grant wheel group passwordless sudo (temporary for installation)
 if ! sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers; then
