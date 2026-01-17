@@ -74,6 +74,28 @@ REPO_URL="${REPO_URL:-https://github.com/rockandrollprophet/anthonyware}"
 
 # Prompt for values if not set
 read -rp "Target disk [$DISK]: " INPUT && [[ -n "$INPUT" ]] && DISK="$INPUT"
+
+# Validate disk exists and is a block device
+if ! [[ -b "$DISK" ]]; then
+  echo "ERROR: Disk $DISK not found or is not a block device."
+  echo "Available disks:"
+  lsblk -d -o NAME,SIZE,TYPE,MODEL | grep disk
+  echo
+  echo "Please specify a valid disk (e.g., /dev/nvme0n1, /dev/sda)"
+  exit 1
+fi
+
+# Warn if disk is mounted
+if mount | grep -q "^${DISK}"; then
+  echo "WARNING: $DISK or its partitions are currently mounted."
+  echo "This may cause issues. Consider unmounting before proceeding."
+  read -rp "Continue anyway? [y/N] " ans
+  if [[ ! "$ans" =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    exit 0
+  fi
+fi
+
 read -rp "Hostname [$HOSTNAME]: " INPUT && [[ -n "$INPUT" ]] && HOSTNAME="$INPUT"
 
 # Require non-empty username
@@ -91,18 +113,28 @@ prompt_secret() {
   local prompt="$1" v1 v2
   while true; do
     read -rsp "$prompt" v1 && echo
+    if [[ -z "$v1" ]]; then
+      echo "ERROR: Password cannot be empty. Try again."
+      continue
+    fi
     read -rsp "Confirm $prompt" v2 && echo
-    if [[ -n "$v1" && "$v1" == "$v2" ]]; then
+    if [[ "$v1" == "$v2" ]]; then
       printf "%s" "$v1"
       return 0
     else
-      echo "Passwords do not match or are empty. Try again."
+      echo "ERROR: Passwords do not match. Try again."
     fi
   done
 }
 
 PASSWORD=$(prompt_secret "User password: ")
 ROOT_PASSWORD=$(prompt_secret "Root password: ")
+
+# Final validation that passwords were captured
+if [[ -z "$PASSWORD" ]] || [[ -z "$ROOT_PASSWORD" ]]; then
+  echo "ERROR: Password capture failed. Please restart the installer."
+  exit 1
+fi
 
 read -rp "Repository URL [$REPO_URL]: " INPUT && [[ -n "$INPUT" ]] && REPO_URL="$INPUT"
 
