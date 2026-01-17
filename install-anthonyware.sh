@@ -493,14 +493,28 @@ fi
 # Set passwords from temporary file
 echo "Setting passwords..."
 if [[ ! -f /.password_temp ]]; then
-  echo "ERROR: Password file not found"
+  echo "ERROR: Password file not found at /.password_temp"
   exit 1
 fi
 
-if ! chpasswd < /.password_temp; then
-  echo "ERROR: Failed to set passwords via chpasswd"
+echo "DEBUG: Contents of password file:"
+cat /.password_temp
+
+echo "Setting user password..."
+USER_PASS=$(grep "^$USERNAME:" /.password_temp | cut -d: -f2)
+if [[ -z "$USER_PASS" ]]; then
+  echo "ERROR: Could not extract user password from file"
   exit 1
 fi
+echo "$USER_PASS" | passwd --stdin "$USERNAME"
+
+echo "Setting root password..."
+ROOT_PASS=$(grep "^root:" /.password_temp | cut -d: -f2)
+if [[ -z "$ROOT_PASS" ]]; then
+  echo "ERROR: Could not extract root password from file"
+  exit 1
+fi
+echo "$ROOT_PASS" | passwd --stdin root
 
 # Remove password file immediately
 rm -f /.password_temp
