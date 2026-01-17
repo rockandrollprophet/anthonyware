@@ -438,7 +438,8 @@ chmod 600 /mnt/root/.password_temp
 
 # Run chroot configuration with comprehensive error handling
 arch-chroot /mnt /bin/bash << CHROOT_EOF
-set -euo pipefail
+# Use -e and pipefail; skip -u to avoid unbound variable exits when values are empty
+set -eo pipefail
 
 # ---- Timezone & Locale ----
 echo "Setting timezone..."
