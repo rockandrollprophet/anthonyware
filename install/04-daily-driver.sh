@@ -80,6 +80,16 @@ sudo systemctl enable --now bluetooth.service
 sudo pacman -S --noconfirm --needed flatpak discover
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
+# Optional WiFi connect step (interactive)
+read -rp "Connect to WiFi now with nmtui? [y/N] " ans
+if [[ "$ans" =~ ^[Yy]$ ]]; then
+    if command -v nmtui >/dev/null; then
+        nmtui
+    else
+        echo "nmtui not found. Use: nmcli device wifi connect <SSID> password <PASSWORD>"
+    fi
+fi
+
 # Zen Browser (AUR)
 if command -v yay >/dev/null; then
     yay -S --noconfirm --needed zen-browser-bin || echo "WARNING: zen-browser-bin failed to install via yay"
