@@ -424,20 +424,8 @@ if [[ -z "$ROOT_PASSWORD" ]]; then
   exit 1
 fi
 
-# Create temporary password file (secure, root-only)
-PASS_FILE=$(mktemp)
-chmod 600 "$PASS_FILE"
-cat > "$PASS_FILE" << PASSEOF
-$USERNAME:$PASSWORD
-root:$ROOT_PASSWORD
-PASSEOF
-
-# Copy password file into chroot (keep under /root to avoid cleanup races)
-cp "$PASS_FILE" /mnt/root/.password_temp
-chmod 600 /mnt/root/.password_temp
-
 # Run chroot configuration with comprehensive error handling
-arch-chroot /mnt /bin/bash << CHROOT_EOF
+env CHROOT_PASSWORD="$PASSWORD" CHROOT_ROOT_PASSWORD="$ROOT_PASSWORD" arch-chroot /mnt /bin/bash << CHROOT_EOF
 # Use -e and pipefail; skip -u to avoid unbound variable exits when values are empty
 set -eo pipefail
 
@@ -496,35 +484,19 @@ if [[ ! -f /etc/vconsole.conf ]]; then
   echo "KEYMAP=us" > /etc/vconsole.conf
 fi
 
-# Set passwords from temporary file
+# Set passwords from environment passed into chroot
 echo "Setting passwords..."
-PASS_FILE="/root/.password_temp"
-if [[ ! -f "$PASS_FILE" ]]; then
-  echo "ERROR: Password file not found at $PASS_FILE"
+
+if [[ -z "${CHROOT_PASSWORD:-}" ]] || [[ -z "${CHROOT_ROOT_PASSWORD:-}" ]]; then
+  echo "ERROR: Password variables not found in chroot"
   exit 1
 fi
-
-echo "DEBUG: Contents of password file:"
-cat "$PASS_FILE"
 
 echo "Setting user password..."
-USER_PASS=$(grep "^$USERNAME:" "$PASS_FILE" | cut -d: -f2- || true)
-if [[ -z "${USER_PASS:-}" ]]; then
-  echo "ERROR: Could not extract user password from file"
-  exit 1
-fi
-echo "$USER_PASS" | passwd --stdin "$USERNAME"
+echo "$CHROOT_PASSWORD" | passwd --stdin "$USERNAME"
 
 echo "Setting root password..."
-ROOT_PASS=$(grep "^root:" "$PASS_FILE" | cut -d: -f2- || true)
-if [[ -z "${ROOT_PASS:-}" ]]; then
-  echo "ERROR: Could not extract root password from file"
-  exit 1
-fi
-echo "$ROOT_PASS" | passwd --stdin root
-
-# Remove password file immediately
-rm -f "$PASS_FILE"
+echo "$CHROOT_ROOT_PASSWORD" | passwd --stdin root
 
 # Grant wheel group passwordless sudo (temporary for installation)
 if ! sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers; then
