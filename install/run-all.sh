@@ -39,6 +39,28 @@ mkdir -p "$LOG_DIR"
 CHECKPOINT_FILE="$LOG_DIR/installation-checkpoint.txt"
 touch "$CHECKPOINT_FILE"
 
+# Error handler: run troubleshooting on failures and archive logs
+on_error() {
+  local exit_code=$?
+  echo "[ERROR] Pipeline failed with exit code ${exit_code}" | tee -a "$LOG_DIR/run-all.log"
+  if [[ -x "${REPO_PATH}/scripts/troubleshoot-all.sh" ]]; then
+    echo "[INFO] Running troubleshooting aggregator..." | tee -a "$LOG_DIR/run-all.log"
+    bash "${REPO_PATH}/scripts/troubleshoot-all.sh" || true
+    # Archive latest troubleshoot log into LOG_DIR
+    local latest
+    latest=$(ls -1t /tmp/anthonyware-troubleshoot-* 2>/dev/null | head -1 || true)
+    if [[ -n "$latest" && -f "$latest" ]]; then
+      cp -f "$latest" "$LOG_DIR/" || true
+      echo "[INFO] Troubleshoot log copied: $latest" | tee -a "$LOG_DIR/run-all.log"
+    fi
+  else
+    echo "[WARN] scripts/troubleshoot-all.sh not found; skipping auto-troubleshoot" | tee -a "$LOG_DIR/run-all.log"
+  fi
+}
+
+# Set trap after variables and paths are prepared
+trap on_error ERR
+
 # Enhanced logging function
 log_message() {
     local level="$1"
@@ -91,6 +113,7 @@ SCRIPTS=(
   "34-diagnostics.sh"
   "35-fusion360-runtime.sh"
   "36-xwayland-legacy.sh"
+  "37-ops-diagnostics.sh"
   "33-user-configs.sh"
   "35-validation.sh"
   "99-update-everything.sh"
@@ -143,6 +166,16 @@ for script in "${SCRIPTS[@]}"; do
     
     if [[ "$SUCCESS" == false ]]; then
         log_message "ERROR" "FAILED: $script after $MAX_RETRIES attempts (see log for details)"
+      # Run troubleshooting for this failure and archive log
+      if [[ -x "${REPO_PATH}/scripts/troubleshoot-all.sh" ]]; then
+        log_message "INFO" "Running troubleshooting for failed script: $script"
+        bash "${REPO_PATH}/scripts/troubleshoot-all.sh" || true
+        tlog=$(ls -1t /tmp/anthonyware-troubleshoot-* 2>/dev/null | head -1 || true)
+        if [[ -n "$tlog" && -f "$tlog" ]]; then
+          cp -f "$tlog" "$LOG_DIR/${script%.sh}-troubleshoot.log" || true
+          log_message "INFO" "Troubleshoot log archived: $LOG_DIR/${script%.sh}-troubleshoot.log"
+        fi
+      fi
         
         # Critical scripts should halt installation
         CRITICAL_SCRIPTS=("00-preflight-checks.sh" "01-base-system.sh" "03-hyprland.sh")
@@ -156,6 +189,24 @@ for script in "${SCRIPTS[@]}"; do
     fi
     echo
 done
+
+# Post-install health checks
+echo "[INFO] Running post-install validation and diagnostics..." | tee -a "$LOG_DIR/run-all.log"
+if [[ -x "${REPO_PATH}/scripts/post-install-validate.sh" ]]; then
+  bash "${REPO_PATH}/scripts/post-install-validate.sh" | tee -a "$LOG_DIR/post-install-validate.log" || true
+else
+  echo "[WARN] scripts/post-install-validate.sh not found" | tee -a "$LOG_DIR/run-all.log"
+fi
+if [[ -x "${REPO_PATH}/scripts/diagnostics-suite.sh" ]]; then
+  bash "${REPO_PATH}/scripts/diagnostics-suite.sh" || true
+  dlog=$(ls -1t /tmp/anthonyware-diagnostics-* 2>/dev/null | head -1 || true)
+  if [[ -n "$dlog" && -f "$dlog" ]]; then
+    cp -f "$dlog" "$LOG_DIR/" || true
+    echo "[INFO] Diagnostics log copied: $dlog" | tee -a "$LOG_DIR/run-all.log"
+  fi
+else
+  echo "[WARN] scripts/diagnostics-suite.sh not found" | tee -a "$LOG_DIR/run-all.log"
+fi
 
 echo "=============================================="
 echo " Installation Pipeline Complete"

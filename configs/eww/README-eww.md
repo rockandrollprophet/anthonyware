@@ -3,6 +3,7 @@
 Eww widget framework.
 
 Contains:
+
 - eww.yuck — widget definitions
 - style.scss — styling
 
