@@ -97,46 +97,27 @@ if mount | grep -q "^${DISK}"; then
 fi
 
 read -rp "Hostname [$HOSTNAME]: " INPUT && [[ -n "$INPUT" ]] && HOSTNAME="$INPUT"
-
-# Require non-empty username
-while true; do
-  read -rp "Username: " USERNAME
-  if [[ -n "$USERNAME" ]]; then
-    break
-  else
-    echo "Username cannot be empty."
-  fi
-done
-
-# Prompt for passwords with confirmation
-prompt_secret() {
-  local prompt="$1" v1 v2
-  while true; do
-    read -rsp "$prompt" v1 && echo
-    if [[ -z "$v1" ]]; then
-      echo "ERROR: Password cannot be empty. Try again."
-      continue
-    fi
-    read -rsp "Confirm $prompt" v2 && echo
-    if [[ "$v1" == "$v2" ]]; then
-      printf "%s" "$v1"
-      return 0
-    else
-      echo "ERROR: Passwords do not match. Try again."
-    fi
-  done
-}
-
-PASSWORD=$(prompt_secret "User password: ")
-ROOT_PASSWORD=$(prompt_secret "Root password: ")
-
-# Final validation that passwords were captured
-if [[ -z "$PASSWORD" ]] || [[ -z "$ROOT_PASSWORD" ]]; then
-  echo "ERROR: Password capture failed. Please restart the installer."
-  exit 1
-fi
-
+read -rp "Timezone [$TIMEZONE]: " INPUT && [[ -n "$INPUT" ]] && TIMEZONE="$INPUT"
+read -rp "Locale [$LOCALE]: " INPUT && [[ -n "$INPUT" ]] && LOCALE="$INPUT"
 read -rp "Repository URL [$REPO_URL]: " INPUT && [[ -n "$INPUT" ]] && REPO_URL="$INPUT"
+
+echo
+echo "============================================================================"
+echo " USER ACCOUNT SETUP"
+echo "============================================================================"
+echo
+echo "This installer does NOT create user accounts or set passwords."
+echo "You will set these up MANUALLY after the base system installs."
+echo
+echo "After installation completes and the system reboots:"
+echo "  1. Login as 'root' (no password set yet)"
+echo "  2. Create your user account with useradd"
+echo "  3. Set passwords with passwd"
+echo "  4. Add user to wheel group for sudo access"
+echo
+echo "See INSTALL_INSTRUCTIONS.md for detailed post-install steps."
+echo "============================================================================"
+echo
 
 # ============================================================
 #  VERIFICATION
@@ -148,7 +129,6 @@ echo "╚═══════════════════════�
 echo
 echo "Target disk:    $DISK"
 echo "Hostname:       $HOSTNAME"
-echo "Username:       $USERNAME"
 echo "Timezone:       $TIMEZONE"
 echo "Locale:         $LOCALE"
 echo "Repository:     $REPO_URL"
@@ -413,28 +393,19 @@ echo "✓ Base system installed and verified"
 echo
 echo "[6/6] Configuring system in chroot..."
 
-# Validate passwords before proceeding
-if [[ -z "$PASSWORD" ]]; then
-  echo "ERROR: User password is empty"
+# Validation check removed - passwords no longer captured
+if [[ -z "$HOSTNAME" ]]; then
+  echo "ERROR: Hostname is empty"
   exit 1
 fi
 
-if [[ -z "$ROOT_PASSWORD" ]]; then
-  echo "ERROR: Root password is empty"
-  exit 1
-fi
-
-# Run chroot configuration with comprehensive error handling
+# Run chroot configuration WITHOUT user creation (manual post-install)
 env \
-  CHROOT_PASSWORD="$PASSWORD" \
-  CHROOT_ROOT_PASSWORD="$ROOT_PASSWORD" \
-  USERNAME="$USERNAME" \
   HOSTNAME="$HOSTNAME" \
   TIMEZONE="$TIMEZONE" \
   LOCALE="$LOCALE" \
   REPO_URL="$REPO_URL" \
   arch-chroot /mnt /bin/bash << 'CHROOT_EOF'
-# Use -e and pipefail; skip -u to avoid unbound variable exits when values are empty
 set -eo pipefail
 
 # ---- Timezone & Locale ----
@@ -476,49 +447,10 @@ if ! systemctl enable NetworkManager; then
   exit 1
 fi
 
-# ---- User Management ----
-echo "Creating user: $USERNAME"
-if ! useradd -m -s /bin/bash "$USERNAME" 2>/dev/null; then
-  if id "$USERNAME" &>/dev/null; then
-    echo "User $USERNAME already exists, continuing..."
-  else
-    echo "ERROR: Failed to create user $USERNAME"
-    exit 1
-  fi
-fi
-
 # Ensure vconsole exists to keep mkinitcpio happy
 if [[ ! -f /etc/vconsole.conf ]]; then
   echo "KEYMAP=us" > /etc/vconsole.conf
 fi
-
-# Set passwords from environment passed into chroot
-echo "Setting passwords..."
-
-if [[ -z "${CHROOT_PASSWORD:-}" ]] || [[ -z "${CHROOT_ROOT_PASSWORD:-}" ]]; then
-  echo "ERROR: Password variables not found in chroot"
-  exit 1
-fi
-
-echo "Setting user password..."
-echo "$CHROOT_PASSWORD" | passwd --stdin "$USERNAME"
-
-echo "Setting root password..."
-echo "$CHROOT_ROOT_PASSWORD" | passwd --stdin root
-
-# Grant wheel group passwordless sudo (temporary for installation)
-if ! sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers; then
-  echo "ERROR: Failed to modify sudoers for passwordless sudo"
-  exit 1
-fi
-
-if ! usermod -aG wheel "$USERNAME"; then
-  echo "ERROR: Failed to add user to wheel group"
-  exit 1
-fi
-
-# Add to additional groups (ignore failures for groups that may not exist yet)
-usermod -aG docker,libvirt "$USERNAME" 2>/dev/null || true
 
 # ---- Bootloader ----
 echo "Installing GRUB bootloader..."
@@ -538,50 +470,23 @@ if [[ ! -f /boot/grub/grub.cfg ]]; then
   exit 1
 fi
 
-# ---- Set up repository ----
-echo "Cloning Anthonyware repository..."
-REPO_PATH="/home/$USERNAME/anthonyware"
+# ---- Create installation directories for post-setup ----
+mkdir -p /root/anthonyware-setup
 
-if ! sudo -u "$USERNAME" git clone "$REPO_URL" "\$REPO_PATH"; then
+# Clone repository to /root for manual user setup later
+echo "Cloning Anthonyware repository to /root..."
+if ! git clone "$REPO_URL" /root/anthonyware-setup/anthonyware; then
   echo "WARNING: Failed to clone repository"
   echo "         URL: $REPO_URL"
   echo "         You can clone it manually after first boot."
 else
-  echo "✓ Repository cloned successfully"
+  echo "✓ Repository cloned to /root/anthonyware-setup/anthonyware"
 fi
 
-# ---- Run installer pipeline ----
-if [[ -d "\$REPO_PATH/install" ]]; then
-  echo "Running Anthonyware installation pipeline..."
-  cd "\$REPO_PATH/install"
-  
-  export TARGET_USER="$USERNAME"
-  export TARGET_HOME="/home/$USERNAME"
-  export REPO_PATH="\$REPO_PATH"
-  
-  if sudo TARGET_USER="\$TARGET_USER" TARGET_HOME="\$TARGET_HOME" REPO_PATH="\$REPO_PATH" bash run-all.sh; then
-    echo "✓ Installation pipeline completed"
-  else
-    echo "WARNING: Installation pipeline encountered errors"
-    echo "         Check logs in /home/$USERNAME/anthonyware/install/"
-  fi
-else
-  echo "WARNING: install directory not found in cloned repo at \$REPO_PATH/install"
-fi
-
-# ---- Restore password-required sudo ----
-echo "Restoring password-required sudo..."
-if ! sed -i 's/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers; then
-  echo "ERROR: Failed to restore sudoers (remove NOPASSWD)"
-  exit 1
-fi
-
-if ! sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers; then
-  echo "ERROR: Failed to restore sudoers (enable password-required sudo)"
-  exit 1
-fi
-
-echo "=== Chroot configuration complete ==="
+echo "=== Base system configuration complete ===\"
+echo
+echo "USER ACCOUNT MUST BE CREATED MANUALLY AFTER REBOOT"
+echo "See INSTALL_INSTRUCTIONS.md for detailed steps"
 
 CHROOT_EOF
 
@@ -591,10 +496,10 @@ CHROOT_EOF
 
 echo
 echo "╔══════════════════════════════════════════════════════╗"
-echo "║ Installation Complete                               ║"
+echo "║ Base System Installation Complete                    ║"
 echo "╚══════════════════════════════════════════════════════╝"
 echo
-echo "System is ready to boot."
+echo "Base Arch system installed and configured."
 echo
 echo "Unmounting filesystems..."
 umount -R /mnt >/dev/null 2>&1 || true
@@ -602,15 +507,21 @@ umount -R /mnt >/dev/null 2>&1 || true
 echo
 echo "Configuration Summary:"
 echo "  Hostname:  $HOSTNAME"
-echo "  User:      $USERNAME"
 echo "  Timezone:  $TIMEZONE"
 echo "  Locale:    $LOCALE"
 echo
-echo "First Boot Steps:"
-echo "  1. Reboot: systemctl reboot"
-echo "  2. Login with username: $USERNAME"
-echo "  3. Run: scripts/first-boot-wizard.sh"
-echo "  4. Run: scripts/welcome.sh"
+echo "╔══════════════════════════════════════════════════════╗"
+echo "║ CRITICAL: USER SETUP REQUIRED                        ║"
+echo "╚══════════════════════════════════════════════════════╝"
+echo
+echo "After reboot, you MUST manually:"
+echo "  1. Boot to root prompt (no password set yet)"
+echo "  2. Create your user account"
+echo "  3. Set passwords for user and root"
+echo "  4. Add user to wheel group for sudo"
+echo "  5. Run the installation pipeline as your user"
+echo
+echo "Detailed instructions: /root/anthonyware-setup/anthonyware/INSTALL_INSTRUCTIONS.md"
 echo
 read -rp "Reboot now? [y/N] " ans
 if [[ "$ans" =~ ^[Yy]$ ]]; then

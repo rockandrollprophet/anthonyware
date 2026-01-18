@@ -81,7 +81,25 @@ case "$GPU_VENDOR" in
         if ! pacman -Si linux-headers >/dev/null 2>&1 && ! pacman -Si linux-lts-headers >/dev/null 2>&1; then
             echo "WARNING: No linux headers package found in repos; NVIDIA/CUDA kernel modules may fail to build."
         fi
-        ${SUDO} pacman -S --noconfirm --needed nvidia nvidia-utils nvidia-settings dkms linux-headers || { echo "ERROR: Failed to install NVIDIA packages or linux-headers"; exit 1; }
+        echo "Installing NVIDIA drivers and kernel headers..."
+        if ! ${SUDO} pacman -S --noconfirm --needed nvidia nvidia-utils nvidia-settings dkms linux-headers 2>&1 | tee /tmp/nvidia-install.log; then
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "ERROR: Failed to install NVIDIA packages"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "Common causes:"
+          echo "  • Conflicting packages (check: pacman -Qs nvidia)"
+          echo "  • Missing kernel headers for current kernel ($(uname -r))"
+          echo "  • Network issues downloading packages"
+          echo ""
+          echo "Troubleshooting:"
+          echo "  • Update package database: sudo pacman -Sy"
+          echo "  • Check conflicts: pacman -Qi nvidia"
+          echo "  • View full log: less /tmp/nvidia-install.log"
+          echo ""
+          exit 1
+        fi
+        echo "✓ NVIDIA drivers installed successfully"
         ;;
     amd)
         ${SUDO} pacman -Syu --noconfirm || echo "WARNING: pacman -Syu failed; continuing"
@@ -114,9 +132,10 @@ done
 
 if (( ${#valid_modules[@]} )); then
     echo "Writing valid VFIO modules to /etc/modules-load.d/vfio.conf"
+    ${SUDO} mkdir -p /etc/modules-load.d
     ${SUDO} cp /etc/modules-load.d/vfio.conf /etc/modules-load.d/vfio.conf.anthonyware.bak 2>/dev/null || true
-    printf "%s
-" "${valid_modules[@]}" | ${SUDO} tee /etc/modules-load.d/vfio.conf >/dev/null
+    printf "%s\n" "${valid_modules[@]}" | ${SUDO} tee /etc/modules-load.d/vfio.conf >/dev/null
+    echo "✓ VFIO modules configured"
 else
     echo "WARNING: No valid VFIO modules found for kernel $(uname -r)"
 fi
@@ -128,12 +147,24 @@ echo "[4/6] Updating GRUB kernel parameters (safe mode)..."
 
 if command -v grub-mkconfig >/dev/null && [ -f /etc/default/grub ]; then
     ${SUDO} cp /etc/default/grub /etc/default/grub.vfio.bak
+    
+    # Validate backup was created
+    if [[ ! -f /etc/default/grub.vfio.bak ]]; then
+      echo "ERROR: Failed to create GRUB backup"
+      exit 1
+    fi
 
     # Insert vendor-specific IOMMU flags only if missing
     case "$GPU_VENDOR" in
         amd)
             if ! grep -q "amd_iommu=on" /etc/default/grub; then
-                ${SUDO} sed -i -E 's/^(GRUB_CMDLINE_LINUX=")(.*)"/\1\2 amd_iommu=on iommu=pt"/' /etc/default/grub
+                ${SUDO} sed -i -E 's/^(GRUB_CMDLINE_LINUX=")(.*)"$/\1\2 amd_iommu=on iommu=pt"/' /etc/default/grub
+                # Validate sed didn't corrupt file
+                if ! grep -qE '^GRUB_CMDLINE_LINUX=".*"$' /etc/default/grub; then
+                  echo "ERROR: GRUB config corrupted, restoring backup"
+                  ${SUDO} cp /etc/default/grub.vfio.bak /etc/default/grub
+                  exit 1
+                fi
                 echo "Added amd_iommu=on iommu=pt"
             else
                 echo "IOMMU flags already present."

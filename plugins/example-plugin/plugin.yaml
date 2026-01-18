@@ -1,0 +1,19 @@
+name: example-plugin
+version: 1.0.0
+description: Example plugin demonstrating the plugin system
+author: Anthonyware Team
+homepage: https://github.com/yourusername/anthonyware
+
+hooks:
+  - pre-install
+  - post-install
+  - pre-script
+  - post-script
+
+dependencies:
+  - base-system
+  - hyprland
+
+scripts:
+  - install.sh
+  - configure.sh

@@ -54,8 +54,17 @@ ${SUDO} pacman -S --noconfirm --needed \
     swaync || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
 
 # Start polkit agent for authentication dialogs
-mkdir -p "$TARGET_HOME/.config/autostart"
-cat > "$TARGET_HOME/.config/autostart/polkit-kde-agent.desktop" <<'EOF'
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${TARGET_HOME}/.config}"
+XDG_AUTOSTART="${XDG_CONFIG_HOME}/autostart"
+
+if command -v safe_mkdir >/dev/null 2>&1; then
+  safe_mkdir "$XDG_AUTOSTART" "$TARGET_USER"
+else
+  mkdir -p "$XDG_AUTOSTART"
+  ${SUDO} chown "$TARGET_USER:$TARGET_USER" "$XDG_AUTOSTART" 2>/dev/null || true
+fi
+
+cat > "${XDG_AUTOSTART}/polkit-kde-agent.desktop" <<'EOF'
 [Desktop Entry]
 Type=Application
 Name=PolicyKit Authentication Agent
@@ -75,17 +84,27 @@ else
     echo "NOTICE: 'yay' not found. Install AUR packages manually if desired: grimblast-git eww-wayland hyprpicker wdisplays"
 fi
 
-# Create config directories using the target user's home
-mkdir -p "$TARGET_HOME/.config/hypr" "$TARGET_HOME/.config/waybar" "$TARGET_HOME/.config/kitty" "$TARGET_HOME/.config/mako" "$TARGET_HOME/.config/eww" "$TARGET_HOME/.config/hyprpaper"
+# Create config directories using XDG_CONFIG_HOME
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${TARGET_HOME}/.config}"
+
+CONFIG_DIRS=("hypr" "waybar" "kitty" "mako" "eww" "hyprpaper")
+for dir in "${CONFIG_DIRS[@]}"; do
+  if command -v safe_mkdir >/dev/null 2>&1; then
+    safe_mkdir "${XDG_CONFIG_HOME}/${dir}" "$TARGET_USER"
+  else
+    mkdir -p "${XDG_CONFIG_HOME}/${dir}"
+    ${SUDO} chown "$TARGET_USER:$TARGET_USER" "${XDG_CONFIG_HOME}/${dir}" 2>/dev/null || true
+  fi
+done
 
 # Placeholder configs (owned by target user)
-printf '# Hyprland config\n' | ${SUDO} tee "$TARGET_HOME/.config/hypr/hyprland.conf" >/dev/null
-printf '# Waybar config\n' | ${SUDO} tee "$TARGET_HOME/.config/waybar/config.jsonc" >/dev/null
-printf '# Kitty config\n' | ${SUDO} tee "$TARGET_HOME/.config/kitty/kitty.conf" >/dev/null
-printf '# Mako config\n' | ${SUDO} tee "$TARGET_HOME/.config/mako/config" >/dev/null
-printf '# Eww config\n' | ${SUDO} tee "$TARGET_HOME/.config/eww/eww.yuck" >/dev/null
-printf '# Hyprpaper config\n' | ${SUDO} tee "$TARGET_HOME/.config/hypr/hyprpaper.conf" >/dev/null
+printf '# Hyprland config\n' | ${SUDO} tee "${XDG_CONFIG_HOME}/hypr/hyprland.conf" >/dev/null
+printf '# Waybar config\n' | ${SUDO} tee "${XDG_CONFIG_HOME}/waybar/config.jsonc" >/dev/null
+printf '# Kitty config\n' | ${SUDO} tee "${XDG_CONFIG_HOME}/kitty/kitty.conf" >/dev/null
+printf '# Mako config\n' | ${SUDO} tee "${XDG_CONFIG_HOME}/mako/config" >/dev/null
+printf '# Eww config\n' | ${SUDO} tee "${XDG_CONFIG_HOME}/eww/eww.yuck" >/dev/null
+printf '# Hyprpaper config\n' | ${SUDO} tee "${XDG_CONFIG_HOME}/hypr/hyprpaper.conf" >/dev/null
 
-${SUDO} chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config" || true
+${SUDO} chown -R "$TARGET_USER:$TARGET_USER" "${XDG_CONFIG_HOME}" || true
 
-echo "=== Hyprland Desktop Setup Complete ==="
+echo "✓ Hyprland Desktop Setup Complete"

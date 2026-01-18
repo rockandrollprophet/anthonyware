@@ -48,7 +48,8 @@ fi
 echo "[user-configs] Using config source: ${CONFIG_SRC}"
 
 # Ensure .config exists
-mkdir -p "${TARGET_HOME}/.config"
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${TARGET_HOME}/.config}"
+mkdir -p "${XDG_CONFIG_HOME}"
 
 # List of config directories to deploy
 CONFIG_DIRS=(
@@ -66,11 +67,11 @@ CONFIG_DIRS=(
 
 for dir in "${CONFIG_DIRS[@]}"; do
   SRC="${CONFIG_SRC}/${dir}"
-  DEST="${TARGET_HOME}/.config/${dir}"
+  DEST="${XDG_CONFIG_HOME}/${dir}"
 
   if [[ -d "${SRC}" ]]; then
     echo "[user-configs] Applying ${dir} → ${DEST}"
-    mkdir -p "${TARGET_HOME}/.config"
+    mkdir -p "${XDG_CONFIG_HOME}"
     if command -v overlay_apply_dir >/dev/null 2>&1; then
       if ! overlay_apply_dir "${SRC}" "${DEST}"; then
         echo "ERROR: Failed to apply ${dir}"; exit 1;
@@ -86,7 +87,7 @@ done
 
 # Fix permissions
 echo "[user-configs] Fixing permissions..."
-chown -R "${TARGET_USER}:${TARGET_USER}" "${TARGET_HOME}/.config" || { echo "ERROR: Failed to chown .config"; exit 1; }
+chown -R "${TARGET_USER}:${TARGET_USER}" "${XDG_CONFIG_HOME}" || { echo "ERROR: Failed to chown .config"; exit 1; }
 
 # Create and configure Zsh RC
 ZSHRC="${TARGET_HOME}/.zshrc"

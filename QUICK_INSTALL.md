@@ -1,50 +1,63 @@
 # 🚀 Anthonyware OS — Quick Install Guide
 
-## Boot to Arch ISO and Run
+## Phase 1: Base System (5-10 min)
 
 ```bash
-# 1. Boot Arch Linux ISO (download from archlinux.org)
-# 2. Connect to internet
+# 1. Boot Arch Linux ISO
+# 2. Connect to network
+iwctl  # for WiFi
+# OR use ethernet (auto-connects)
 
-# WiFi:
-iwctl
-# [iwctl]# device list
-# [iwctl]# station wlan0 scan
-# [iwctl]# station wlan0 get-networks
-# [iwctl]# station wlan0 connect "YOUR_SSID"
-# [iwctl]# exit
+# 3. Navigate to anthonyware on USB
+lsblk  # find your USB
+mount /dev/sdX1 /mnt
+cd /mnt/anthonyware
 
-# OR Ethernet (usually auto-connects):
-ip link
-
-# 3. Install git
-pacman -Sy git
-
-# 4. Clone repo
-git clone https://github.com/rockandrollprophet/anthonyware /root/anthonyware
-cd /root/anthonyware
-
-# 5. Run pre-install check
-chmod +x pre-install-check.sh
-sudo ./pre-install-check.sh
-
-# 6. If all checks pass, run installer
-chmod +x install-anthonyware.sh
-sudo ./install-anthonyware.sh
-
-# 7. Follow prompts and answer:
-#    - Disk: /dev/nvme0n1 (or /dev/sda for SATA)
-#    - Hostname: anthonyware (or your choice)
-#    - Username: (enter your desired login name)
-#    - User Password: (with confirmation)
-#    - Root Password: (with confirmation)
-#    - Repository URL: (leave default or customize)
-
-# 8. System will install, then reboot
-# 9. Login and enjoy!
+# 4. Run base installer
+bash install-anthonyware.sh
+# Prompts: disk, hostname, timezone, locale (NO username/password)
+# Installs base Arch + GRUB, then reboots
 ```
 
-## What You'll Be Asked
+## Phase 2: User Setup (2 min)
+
+```bash
+# 1. After reboot, press Ctrl+Alt+F2 for root shell
+# 2. Run user creation script
+cd /root/anthonyware-setup/anthonyware/install
+bash 00-create-user.sh
+# Prompts: username, user password, root password
+# Configures sudo automatically
+```
+
+## Phase 3: Full Install (45-60 min)
+
+```bash
+# 1. Logout and login as your new user
+# 2. Run installation pipeline
+sudo CONFIRM_INSTALL=YES \
+     TARGET_USER="youruser" \
+     TARGET_HOME="/home/youruser" \
+     REPO_PATH="/root/anthonyware-setup/anthonyware" \
+     bash /root/anthonyware-setup/anthonyware/install/run-all.sh
+
+# 3. Pipeline installs 260+ packages
+# 4. Reboot when complete
+sudo reboot
+
+# 5. Login at SDDM graphical screen, select Hyprland
+```
+
+## Critical Changes (2026-01-17)
+
+✅ **SDDM now actually installed** (was missing!)  
+✅ **User creation is manual** (not automated)  
+✅ **Pipeline works before user exists**  
+✅ **All scripts idempotent** (root or sudo)
+
+See **INSTALLATION_FIXES_2026-01-17.md** for details.
+
+## What Gets Installed
 
 | Prompt | Default | Notes |
 | -------- | --------- | ------- |

@@ -1,0 +1,15 @@
+# Security Policy Rules
+# Format: SEVERITY check_type target "message"
+
+# Required security packages
+MUST package_installed firewalld "Firewall must be installed"
+MUST package_installed apparmor "AppArmor must be installed for mandatory access control"
+
+# Forbidden insecure packages
+FORBID package_installed telnet "Telnet is forbidden - use SSH instead"
+FORBID package_installed rsh "RSH is forbidden - use SSH instead"
+
+# Recommended security practices
+SHOULD service_enabled firewalld "Firewall should be enabled"
+SHOULD service_enabled apparmor "AppArmor should be enabled"
+SHOULD package_installed ufw "UFW firewall frontend recommended"

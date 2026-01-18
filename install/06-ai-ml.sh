@@ -43,15 +43,42 @@ ${SUDO} pacman -S --noconfirm --needed \
 
 # PyTorch (CUDA)
 echo "[06] Installing PyTorch with CUDA support..."
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+echo "     This may take 5-10 minutes depending on network speed..."
+if ! pip install --progress-bar on torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121 2>&1 | tee /tmp/pytorch-install.log; then
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "ERROR: PyTorch installation failed"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "Common causes:"
+  echo "  • Network timeout or slow connection"
+  echo "  • Insufficient disk space (need ~5GB)"
+  echo "  • CUDA version mismatch"
+  echo ""
+  echo "Troubleshooting:"
+  echo "  • Check disk space: df -h"
+  echo "  • View full log: less /tmp/pytorch-install.log"
+  echo "  • Retry manually: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121"
+  echo ""
+  exit 1
+fi
+echo "✓ PyTorch installed successfully"
 
 # TensorFlow (CUDA)
+echo ""
 echo "[06] Installing TensorFlow with CUDA support..."
-pip install tensorflow==2.15 tensorflow-io-gcs-filesystem
+echo "     This may take 3-5 minutes..."
+if ! pip install --progress-bar on tensorflow==2.15 tensorflow-io-gcs-filesystem 2>&1; then
+  echo "⚠ TensorFlow installation failed (non-fatal)"
+  echo "  You can install manually later if needed"
+else
+  echo "✓ TensorFlow installed successfully"
+fi
 
 # HuggingFace + LLM tooling
+echo ""
 echo "[06] Installing HuggingFace + LLM ecosystem..."
-pip install \
+echo "     This may take 5-7 minutes..."
+if pip install --progress-bar on \
     transformers \
     accelerate \
     datasets \
@@ -61,7 +88,11 @@ pip install \
     onnxruntime-gpu \
     deepspeed \
     flash-attn \
-    sentencepiece
+    sentencepiece 2>&1; then
+  echo "✓ HuggingFace ecosystem installed"
+else
+  echo "⚠ Some HuggingFace packages failed (continuing)"
+fi
 
 # Scientific computing + numerical methods
 echo "[06] Installing scientific computing libraries..."

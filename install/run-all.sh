@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# shellcheck disable=SC1090,SC1091
+# SC1090/SC1091: Dynamic source paths are intentional
+
 # ============================================================
 #  Anthonyware OS 1.0 — Installation Pipeline Orchestrator
 #
@@ -19,11 +22,67 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LIB_DIR="${SCRIPT_DIR}/lib"
 
-# Source all library modules
+# Essential libraries that must load first
+CRITICAL_LIBS=("logging.sh" "safety.sh" "ux.sh" "checkpoint.sh")
+
+# Load critical libraries with validation
+for lib_name in "${CRITICAL_LIBS[@]}"; do
+  lib_path="${LIB_DIR}/${lib_name}"
+  if [[ ! -f "$lib_path" ]]; then
+    echo "FATAL ERROR: Critical library missing: $lib_name"
+    echo "Expected at: $lib_path"
+    exit 1
+  fi
+  
+  # shellcheck disable=SC1090
+  if ! source "$lib_path"; then
+    echo "FATAL ERROR: Failed to source critical library: $lib_name"
+    exit 1
+  fi
+  
+  # Verify key functions are defined
+  case "$lib_name" in
+    logging.sh)
+      if ! command -v log_init >/dev/null 2>&1; then
+        echo "FATAL ERROR: logging.sh did not define log_init function"
+        exit 1
+      fi
+      ;;
+    safety.sh)
+      if ! command -v safety_check_all >/dev/null 2>&1; then
+        echo "FATAL ERROR: safety.sh did not define safety_check_all function"
+        exit 1
+      fi
+      ;;
+    ux.sh)
+      if ! command -v ux_header >/dev/null 2>&1; then
+        echo "FATAL ERROR: ux.sh did not define ux_header function"
+        exit 1
+      fi
+      ;;
+    checkpoint.sh)
+      if ! command -v checkpoint_init >/dev/null 2>&1; then
+        echo "FATAL ERROR: checkpoint.sh did not define checkpoint_init function"
+        exit 1
+      fi
+      ;;
+  esac
+done
+
+# Source remaining library modules
 for lib in "$LIB_DIR"/*.sh; do
   if [[ -f "$lib" ]]; then
+    lib_name=$(basename "$lib")
+    # Skip already-loaded critical libs
+    if [[ " ${CRITICAL_LIBS[*]} " =~ " ${lib_name} " ]]; then
+      continue
+    fi
+    
     # shellcheck disable=SC1090
-    source "$lib"
+    if ! source "$lib"; then
+      echo "WARNING: Failed to source library: $lib_name"
+      echo "Continuing, but some features may be unavailable"
+    fi
   fi
 done
 
@@ -107,13 +166,17 @@ export LOG_DIR
 log_init
 log_info "Anthonyware OS Installation Pipeline Starting"
 
+# Initialize UX system
+ux_progress_init
+ux_header "Anthonyware OS v2.0 Installation"
+
 # Initialize metrics
 if command -v metrics_init >/dev/null 2>&1; then
   metrics_init
 fi
 
 # Initialize checkpoint system
-checkpoint_init
+checkpoint_init || { log_error "Checkpoint system initialization failed"; exit 1; }
 log_info "Checkpoint system initialized"
 
 # Prefetch package metadata in cache
@@ -132,24 +195,27 @@ log_info "GPU: $DETECTED_GPU | CPU: $DETECTED_CPU"
 # Guard: refuse to run on live ISO environments
 if [[ -d /run/archiso || -f /etc/archlive ]]; then
   log_error "Detected live ISO environment (/run/archiso present). Aborting to avoid installing to the live medium."
-  echo "Reboot into the installed system and rerun: CONFIRM_INSTALL=YES bash install/run-all.sh"
+  echo ""
+  ux_error "Cannot install from live ISO environment"
+  echo ""
+  echo "CORRECT PROCEDURE:"
+  echo "  1. Boot into your INSTALLED Arch Linux system"
+  echo "  2. Clone the anthonyware repository"
+  echo "  3. Run this installer from the installed system"
+  echo ""
+  echo "If you haven't installed Arch yet:"
+  echo "  • Follow the Arch Installation Guide first"
+  echo "  • Install base system to your hard drive"
+  echo "  • Boot into it, then run this installer"
+  echo ""
   exit 3
 fi
 
-# Guard: require root (or sudo) to avoid partial installs
-if [[ "${EUID}" -ne 0 ]]; then
-  log_error "Please run as root: sudo CONFIRM_INSTALL=YES bash install/run-all.sh"
+# Run comprehensive safety checks (network, disk space, pacman lock, etc.)
+if ! safety_check_all; then
+  log_error "Safety checks failed. Cannot proceed with installation."
+  ux_show_troubleshooting
   exit 3
-fi
-
-# Guard: ensure network connectivity
-if ! check_network; then
-  log_warn "Network connectivity issue detected"
-  if ! wait_for_network 30; then
-    log_error "Cannot establish network connectivity. Installation requires internet."
-    exit 3
-  fi
-  log_success "Network connectivity restored"
 fi
 
 # Health checks (battery can be bypassed with HEALTH_IGNORE_BATTERY=1 or HEALTH_SKIP_ALL=1)
@@ -222,6 +288,20 @@ if [[ "$INTERACTIVE" == "1" ]] || [[ -z "$PROFILE" && -t 0 ]]; then
   fi
   if [[ "$PROFILE" == "custom" ]]; then
     CUSTOM_COMPONENTS=$(select_custom_components)
+  fi
+fi
+
+# Set default profile if not specified
+PROFILE="${PROFILE:-full}"
+
+# Show installation plan to user
+ux_show_plan "$PROFILE" "38"
+
+# Request confirmation unless auto-confirmed
+if [[ "$CONFIRM_INSTALL" != "YES" ]] && [[ -t 0 ]]; then
+  if ! ux_confirm_install "$PROFILE"; then
+    echo "Installation cancelled by user"
+    exit 0
   fi
 fi
 
@@ -577,8 +657,10 @@ fi
 for script in "${SCRIPTS[@]}"; do
     ((CURRENT_SCRIPT++))
     
-    # Show progress
-    if command -v show_progress >/dev/null 2>&1; then
+    # Show progress with UX improvements
+    if command -v ux_progress_update >/dev/null 2>&1; then
+      ux_progress_update $CURRENT_SCRIPT $TOTAL_SCRIPTS "$script"
+    elif command -v show_progress >/dev/null 2>&1; then
       show_progress $CURRENT_SCRIPT $TOTAL_SCRIPTS "Installing: $script"
     fi
     
@@ -766,3 +848,6 @@ fi
 generate_text_report | tee -a "$LOG_DIR/final-report.txt"
 
 log_success "Installation pipeline completed successfully"
+
+# Show next steps
+ux_show_next_steps "$PROFILE"

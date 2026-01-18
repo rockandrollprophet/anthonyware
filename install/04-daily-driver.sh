@@ -77,7 +77,19 @@ ${SUDO} pacman -S --noconfirm --needed \
     python-imageio
 
 # Enable printing services
-${SUDO} systemctl enable --now cups.service
+if command -v safe_enable_service >/dev/null 2>&1; then
+  safe_enable_service cups "CUPS printing service"
+  safe_enable_service avahi-daemon "Avahi mDNS/DNS-SD"
+else
+  if systemctl list-unit-files | grep -q "^cups.service"; then
+    ${SUDO} systemctl enable --now cups.service || echo "⚠ Failed to enable CUPS"
+  fi
+  if systemctl list-unit-files | grep -q "^avahi-daemon.service"; then
+    ${SUDO} systemctl enable --now avahi-daemon.service || echo "⚠ Failed to enable Avahi"
+  fi
+fi
+
+echo "✓ Daily driver applications installed"
 ${SUDO} systemctl enable --now avahi-daemon.service
 
 # Enable bluetooth

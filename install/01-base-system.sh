@@ -104,9 +104,9 @@ xdg-user-dirs-update
 if ! command -v yay >/dev/null; then
     echo "Installing yay..."
     git clone https://aur.archlinux.org/yay.git /tmp/yay
-    cd /tmp/yay
+    cd /tmp/yay || exit 1
     makepkg -si --noconfirm
-    cd -
+    cd - || exit 1
 fi
 
 # Update pkgfile database

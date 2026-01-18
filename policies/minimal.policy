@@ -1,0 +1,16 @@
+# Minimal Installation Policy
+# Ensures core components are present
+
+# Core packages
+MUST package_installed base "Base system must be installed"
+MUST package_installed linux "Linux kernel must be installed"
+MUST package_installed networkmanager "NetworkManager must be installed"
+
+# Desktop requirements
+MUST package_installed hyprland "Hyprland compositor must be installed"
+MUST package_installed kitty "Terminal emulator must be installed"
+MUST package_installed firefox "Web browser must be installed"
+
+# Services
+MUST service_enabled NetworkManager "NetworkManager must be enabled"
+SHOULD service_enabled sddm "SDDM display manager should be enabled"

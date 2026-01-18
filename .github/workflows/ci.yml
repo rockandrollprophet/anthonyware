@@ -1,0 +1,50 @@
+name: CI Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y shellcheck shfmt
+    
+    - name: Run CI tests
+      run: |
+        chmod +x scripts/ci-test.sh
+        bash scripts/ci-test.sh
+    
+    - name: Archive test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: |
+          tests/*.log
+          logs/*.txt
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Shellcheck
+      run: |
+        sudo apt-get install -y shellcheck
+        chmod +x scripts/shellcheck-all.sh
+        bash scripts/shellcheck-all.sh
+    
+    - name: Format check
+      run: |
+        sudo apt-get install -y shfmt
+        shfmt -d -i 2 -s -ci install/*.sh install/lib/*.sh scripts/*.sh
