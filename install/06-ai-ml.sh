@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [06] AI / Machine Learning / Scientific Computing Stack ==="
 
 # CUDA + cuDNN already installed in GPU script
 # Core scientific Python stack
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     python \
     python-pip \
     python-numpy \
@@ -31,7 +38,7 @@ sudo pacman -S --noconfirm --needed \
     nvtop
 
 # GPU monitoring and profiling
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     cuda-tools || echo "WARNING: cuda-tools install failed"
 
 # PyTorch (CUDA)

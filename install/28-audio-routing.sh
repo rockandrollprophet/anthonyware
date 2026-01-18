@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [28] Audio Routing Tools ==="
 
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     pipewire \
     pipewire-alsa \
     pipewire-pulse \
@@ -18,6 +25,6 @@ else
     echo "NOTICE: 'yay' not found; install qpwgraph manually if desired"
 fi
 
-sudo systemctl --user enable --now wireplumber
+${SUDO} systemctl --user enable --now wireplumber
 
 echo "=== Audio Routing Setup Complete ==="

@@ -3,15 +3,22 @@ set -euo pipefail
 
 echo "=== [01] Base System Setup ==="
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 # Update system
-sudo pacman -Syu --noconfirm
+${SUDO} pacman -Syu --noconfirm
 
 # Enable parallel downloads + color
-sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
-sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
+${SUDO} sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+${SUDO} sed -i 's/^#Color/Color/' /etc/pacman.conf
 
 # Install core packages
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     base-devel \
     git \
     git-lfs \
@@ -88,7 +95,7 @@ sudo pacman -S --noconfirm --needed \
     glfw-x11
 
 # Enable NetworkManager
-sudo systemctl enable --now NetworkManager
+${SUDO} systemctl enable --now NetworkManager
 
 # Generate user directories
 xdg-user-dirs-update
@@ -103,7 +110,7 @@ if ! command -v yay >/dev/null; then
 fi
 
 # Update pkgfile database
-sudo pkgfile --update
+${SUDO} pkgfile --update
 
 # Install AUR tools and utilities
 yay -S --noconfirm --needed \
@@ -129,6 +136,6 @@ yay -S --noconfirm --needed \
     watchman
 
 # Optimize mirrors
-sudo reflector --country "United States" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+${SUDO} reflector --country "United States" --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 echo "=== Base System Setup Complete ==="

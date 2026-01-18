@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [22] Homelab & Server Tools ==="
 
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     cockpit \
     tailscale \
     syncthing \
@@ -12,8 +19,8 @@ sudo pacman -S --noconfirm --needed \
     samba \
     nfs-utils
 
-sudo systemctl enable --now cockpit.socket
-sudo systemctl enable --now tailscaled
-sudo systemctl enable --now syncthing@"$USER"
+${SUDO} systemctl enable --now cockpit.socket
+${SUDO} systemctl enable --now tailscaled
+${SUDO} systemctl enable --now syncthing@"$USER"
 
 echo "=== Homelab Tools Setup Complete ==="

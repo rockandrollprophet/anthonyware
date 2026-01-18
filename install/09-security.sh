@@ -1,29 +1,36 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [09] Security Stack ==="
 
 # Firewalld
-sudo pacman -S --noconfirm --needed firewalld
-sudo systemctl enable --now firewalld
+${SUDO} pacman -S --noconfirm --needed firewalld
+${SUDO} systemctl enable --now firewalld
 
 # AppArmor
-sudo pacman -S --noconfirm --needed apparmor apparmor-parser
-sudo systemctl enable --now apparmor
+${SUDO} pacman -S --noconfirm --needed apparmor apparmor-parser
+${SUDO} systemctl enable --now apparmor
 
 # Firejail
-sudo pacman -S --noconfirm --needed firejail firetools
+${SUDO} pacman -S --noconfirm --needed firejail firetools
 
 # Fail2ban
-sudo pacman -S --noconfirm --needed fail2ban
-sudo systemctl enable --now fail2ban
+${SUDO} pacman -S --noconfirm --needed fail2ban
+${SUDO} systemctl enable --now fail2ban
 
 # USBGuard
-sudo pacman -S --noconfirm --needed usbguard
-sudo systemctl enable --now usbguard
+${SUDO} pacman -S --noconfirm --needed usbguard
+${SUDO} systemctl enable --now usbguard
 
 # Encryption tools
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     keepassxc \
     veracrypt \
     gnupg \

@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [03] Hyprland Desktop Setup ==="
 
 TARGET_USER="${SUDO_USER:-$USER}"
@@ -20,8 +27,10 @@ for cmd in pacman mkdir; do
 done
 
 # Core Hyprland packages
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     hyprland \
+    sddm \
+    sddm-kcm \
     waybar \
     wofi \
     kitty \
@@ -70,13 +79,13 @@ fi
 mkdir -p "$TARGET_HOME/.config/hypr" "$TARGET_HOME/.config/waybar" "$TARGET_HOME/.config/kitty" "$TARGET_HOME/.config/mako" "$TARGET_HOME/.config/eww" "$TARGET_HOME/.config/hyprpaper"
 
 # Placeholder configs (owned by target user)
-printf '# Hyprland config\n' | sudo tee "$TARGET_HOME/.config/hypr/hyprland.conf" >/dev/null
-printf '# Waybar config\n' | sudo tee "$TARGET_HOME/.config/waybar/config.jsonc" >/dev/null
-printf '# Kitty config\n' | sudo tee "$TARGET_HOME/.config/kitty/kitty.conf" >/dev/null
-printf '# Mako config\n' | sudo tee "$TARGET_HOME/.config/mako/config" >/dev/null
-printf '# Eww config\n' | sudo tee "$TARGET_HOME/.config/eww/eww.yuck" >/dev/null
-printf '# Hyprpaper config\n' | sudo tee "$TARGET_HOME/.config/hypr/hyprpaper.conf" >/dev/null
+printf '# Hyprland config\n' | ${SUDO} tee "$TARGET_HOME/.config/hypr/hyprland.conf" >/dev/null
+printf '# Waybar config\n' | ${SUDO} tee "$TARGET_HOME/.config/waybar/config.jsonc" >/dev/null
+printf '# Kitty config\n' | ${SUDO} tee "$TARGET_HOME/.config/kitty/kitty.conf" >/dev/null
+printf '# Mako config\n' | ${SUDO} tee "$TARGET_HOME/.config/mako/config" >/dev/null
+printf '# Eww config\n' | ${SUDO} tee "$TARGET_HOME/.config/eww/eww.yuck" >/dev/null
+printf '# Hyprpaper config\n' | ${SUDO} tee "$TARGET_HOME/.config/hypr/hyprpaper.conf" >/dev/null
 
-sudo chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config" || true
+${SUDO} chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config" || true
 
 echo "=== Hyprland Desktop Setup Complete ==="

@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [08] Hardware Support ==="
 
 # 3Dconnexion
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     spacenavd \
     libspnav \
     x11-spnav \
@@ -16,16 +23,16 @@ else
     echo "NOTICE: 'yay' not found; install spnavcfg manually if desired"
 fi
 
-sudo systemctl enable --now spacenavd
+${SUDO} systemctl enable --now spacenavd
 
 # Logitech
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     solaar \
     piper \
     ratbagd \
     ltunify
 
-sudo systemctl enable --now ratbagd
+${SUDO} systemctl enable --now ratbagd
 
 # Alienware / Dell
 if command -v yay >/dev/null; then
@@ -39,12 +46,12 @@ else
 fi
 
 # Sensors + thermal control
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     lm_sensors \
     psensor \
     thermald
 
-sudo systemctl enable --now thermald
-sudo sensors-detect --auto
+${SUDO} systemctl enable --now thermald
+${SUDO} sensors-detect --auto
 
 echo "=== Hardware Support Setup Complete ==="

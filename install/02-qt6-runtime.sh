@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 # 02-qt6-runtime.sh
 # Install full Qt6 runtime stack to harden SDDM + QtQuick themes.
 
 if [[ "${EUID:-$(id -u)}" -ne 0 ]]; then
-  echo "This script must be run as root (via sudo from run-all.sh)." >&2
+  echo "This script must be run as root (via ${SUDO} from run-all.sh)." >&2
   exit 1
 fi
 

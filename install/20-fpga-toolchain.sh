@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [20] FPGA Toolchain / Hardware Description Languages ==="
 
 # Open-source FPGA tools (Lattice, ECP5, iCE40)
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     yosys \
     nextpnr \
     iverilog \
@@ -12,11 +19,11 @@ sudo pacman -S --noconfirm --needed \
     verilator
 
 # Simulation and verification
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     ghdl || echo "WARNING: ghdl install failed (VHDL simulator)"
 
 # Hardware description languages and tooling
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     python-pyserial \
     python-usb
 

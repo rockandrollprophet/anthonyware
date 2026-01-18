@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [11] VFIO / Windows VM Setup ==="
 
 TARGET_USER="${SUDO_USER:-$USER}"
 
 # Core virtualization stack
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     qemu-full \
     virt-manager \
     virt-viewer \
@@ -19,14 +26,14 @@ sudo pacman -S --noconfirm --needed \
     libvirt || { echo "ERROR: Failed to install virtualization packages"; exit 1; }
 
 # Enable libvirt + networking
-sudo systemctl enable --now libvirtd
-sudo systemctl enable --now dnsmasq
+${SUDO} systemctl enable --now libvirtd
+${SUDO} systemctl enable --now dnsmasq
 
 # Allow user to manage VMs
-sudo usermod -aG libvirt "$TARGET_USER"
+${SUDO} usermod -aG libvirt "$TARGET_USER"
 
 # VirtIO drivers ISO (Windows drivers)
-sudo pacman -S --noconfirm --needed virtio-win || echo "WARNING: virtio-win install failed"
+${SUDO} pacman -S --noconfirm --needed virtio-win || echo "WARNING: virtio-win install failed"
 
 # Looking Glass client (optional, but included)
 if command -v yay >/dev/null; then
@@ -36,11 +43,11 @@ else
 fi
 
 # QEMU guest agent for better integration
-sudo pacman -S --noconfirm --needed qemu-guest-agent || echo "WARNING: qemu-guest-agent install failed"
-sudo systemctl enable --now qemu-guest-agent
+${SUDO} pacman -S --noconfirm --needed qemu-guest-agent || echo "WARNING: qemu-guest-agent install failed"
+${SUDO} systemctl enable --now qemu-guest-agent
 
 # SPICE agent for clipboard / resolution support
-sudo pacman -S --noconfirm --needed spice-vdagent || echo "WARNING: spice-vdagent install failed"
+${SUDO} pacman -S --noconfirm --needed spice-vdagent || echo "WARNING: spice-vdagent install failed"
 
 echo "=== VFIO / Windows VM Tooling Setup Complete ==="
 echo "NOTE: VM XML, GPU/USB passthrough, and IOMMU group tuning are documented in vm/*.md"

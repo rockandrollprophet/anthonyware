@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 # Anthonyware - Operations & Diagnostics tooling
 # Installs lightweight diagnostics and troubleshooting utilities.
 

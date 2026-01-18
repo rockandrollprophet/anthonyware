@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [04] Daily Driver Applications ==="
 
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     dolphin \
     dolphin-plugins \
     kio-extras \
@@ -58,26 +65,26 @@ sudo pacman -S --noconfirm --needed \
     krita
 
 # Image processing CLI tools
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     optipng \
     jpegoptim \
     webp \
     libwebp
 
 # Rendering and visualization (already in Blender from CAD, but adding CLI support)
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     python-pillow \
     python-imageio
 
 # Enable printing services
-sudo systemctl enable --now cups.service
-sudo systemctl enable --now avahi-daemon.service
+${SUDO} systemctl enable --now cups.service
+${SUDO} systemctl enable --now avahi-daemon.service
 
 # Enable bluetooth
-sudo systemctl enable --now bluetooth.service
+${SUDO} systemctl enable --now bluetooth.service
 
 # Flatpak + Discover
-sudo pacman -S --noconfirm --needed flatpak discover
+${SUDO} pacman -S --noconfirm --needed flatpak discover
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 # Optional WiFi connect step (interactive)

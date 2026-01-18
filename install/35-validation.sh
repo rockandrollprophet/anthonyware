@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 # ============================================================
 #  35-validation.sh
 #  Comprehensive validation of all installed components
@@ -13,11 +20,14 @@ echo "=============================================="
 
 TARGET_USER="${TARGET_USER:-${SUDO_USER:-}}"
 if [[ -z "${TARGET_USER}" || "${TARGET_USER}" == "root" ]]; then
-  echo "ERROR: TARGET_USER not set. Run via run-all.sh." >&2
-  exit 1
+  echo "WARNING: TARGET_USER not set or is root. Skipping user-specific validations." >&2
+  TARGET_USER=""
+  TARGET_HOME=""
+elif ! TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)" || [[ ! -d "$TARGET_HOME" ]]; then
+  echo "WARNING: User $TARGET_USER or home directory not found. Skipping user-specific validations." >&2
+  TARGET_USER=""
+  TARGET_HOME=""
 fi
-
-TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
 
 log() { echo "[validation] $*"; }
 err() { echo "[validation] ERROR: $*" >&2; }
@@ -80,9 +90,13 @@ check_cmd "hyprland"
 check_cmd "waybar"
 check_cmd "wofi"
 check_cmd "kitty"
-check_dir "${TARGET_HOME}/.config/hypr"
-check_dir "${TARGET_HOME}/.config/waybar"
-check_dir "${TARGET_HOME}/.config/kitty"
+if [[ -n "$TARGET_HOME" ]]; then
+  check_dir "${TARGET_HOME}/.config/hypr"
+  check_dir "${TARGET_HOME}/.config/waybar"
+  check_dir "${TARGET_HOME}/.config/kitty"
+else
+  log "⊙ Skipping user config checks (no TARGET_HOME)"
+fi
 
 # ============================================================
 #  SECTION 3: GPU Drivers
@@ -263,10 +277,14 @@ fi
 #  SECTION 16: User Configs
 # ============================================================
 log "=== User Configurations ==="
-for cfg in hypr hyprlock hypridle waybar kitty fastfetch eww swaync; do
-  check_dir "${TARGET_HOME}/.config/${cfg}"
-done
-check_file "${TARGET_HOME}/.anthonyware-installed"
+if [[ -n "$TARGET_HOME" ]]; then
+  for cfg in hypr hyprlock hypridle waybar kitty fastfetch eww swaync; do
+    check_dir "${TARGET_HOME}/.config/${cfg}"
+  done
+  check_file "${TARGET_HOME}/.anthonyware-installed"
+else
+  log "⊙ Skipping user config checks (no TARGET_HOME)"
+fi
 
 # ============================================================
 #  SECTION 17: System Files

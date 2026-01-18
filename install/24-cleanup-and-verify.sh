@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [24] Cleanup & Verification ==="
 
 # Clean orphan packages
-sudo pacman -Rns --noconfirm $(pacman -Qtdq || true)
+${SUDO} pacman -Rns --noconfirm $(pacman -Qtdq || true)
 
 # Update system one last time
-sudo pacman -Syu --noconfirm
+${SUDO} pacman -Syu --noconfirm
 
 # Verify GPU
 echo "GPU Info:"

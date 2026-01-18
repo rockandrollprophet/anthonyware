@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [25] Color Management ==="
 
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     colord \
     gnome-color-manager \
     argyllcms
@@ -15,6 +22,6 @@ else
     echo "NOTICE: 'yay' not found; install displaycal manually if desired"
 fi
 
-sudo systemctl enable --now colord.service
+${SUDO} systemctl enable --now colord.service
 
 echo "=== Color Management Setup Complete ==="

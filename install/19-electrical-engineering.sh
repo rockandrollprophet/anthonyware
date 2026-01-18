@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [19] Electrical Engineering Tools ==="
 
 # Core EE/electronics
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     kicad \
     ngspice \
     qucs-s \
@@ -12,12 +19,12 @@ sudo pacman -S --noconfirm --needed \
     gerbv
 
 # Signal analysis and visualization
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     sigrok-cli \
     pulseview
 
 # Microcontroller programming
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     arduino-cli \
     openocd \
     avrdude \
@@ -26,18 +33,18 @@ sudo pacman -S --noconfirm --needed \
     arm-none-eabi-gdb
 
 # Test and measurement
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     python-usbtmc \
     python-pyvisa
 
 # Scientific / numerical computation for circuit analysis
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     octave \
     octave-control \
     octave-signal
 
 # Visualization and plotting
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     gnuplot
 
 # Advanced tools (AUR)

@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [99] Update Everything ==="
 
 # System update
-sudo pacman -Syu --noconfirm
+${SUDO} pacman -Syu --noconfirm
 
 # AUR update
 if command -v yay >/dev/null; then
@@ -17,7 +24,7 @@ fi
 flatpak update -y || true
 
 # Firmware update
-sudo fwupdmgr refresh || true
-sudo fwupdmgr update || true
+${SUDO} fwupdmgr refresh || true
+${SUDO} fwupdmgr update || true
 
 echo "=== Full System Update Complete ==="

@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [10] Backup & Snapshot System ==="
 
 # Timeshift + Btrfs integration
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     timeshift \
     timeshift-autosnap \
     btrfs-progs \
@@ -12,18 +19,18 @@ sudo pacman -S --noconfirm --needed \
     grub-btrfs
 
 # BorgBackup + Vorta
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     borgbackup \
     vorta
 
 # Syncthing
-sudo pacman -S --noconfirm --needed syncthing
-sudo systemctl enable --now syncthing@"$USER"
+${SUDO} pacman -S --noconfirm --needed syncthing
+${SUDO} systemctl enable --now syncthing@"$USER"
 
 # Restic (optional)
-sudo pacman -S --noconfirm --needed restic
+${SUDO} pacman -S --noconfirm --needed restic
 
 # Rclone
-sudo pacman -S --noconfirm --needed rclone
+${SUDO} pacman -S --noconfirm --needed rclone
 
 echo "=== Backup System Setup Complete ==="

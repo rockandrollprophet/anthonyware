@@ -7,6 +7,12 @@ set -euo pipefail
 #  Fixes permissions, ownership, and appends shell RC entries.
 # ============================================================
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/lib/overlay.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "${SCRIPT_DIR}/lib/overlay.sh"
+fi
+
 if [[ "${EUID:-$(id -u)}" -ne 0 ]]; then
   echo "This script must be run as root (via sudo from run-all.sh)." >&2
   exit 1
@@ -23,8 +29,23 @@ TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
 echo "=== [33] User Config Deployment ==="
 echo "[user-configs] Deploying configs into ${TARGET_HOME}"
 
-# Determine repo location
-CONFIG_SRC="${REPO_PATH:-${TARGET_HOME}/anthonyware}/configs"
+# Determine repo location - check multiple possible paths
+if [[ -n "${REPO_PATH:-}" ]] && [[ -d "${REPO_PATH}/configs" ]]; then
+  CONFIG_SRC="${REPO_PATH}/configs"
+elif [[ -d "${TARGET_HOME}/anthonyware/configs" ]]; then
+  CONFIG_SRC="${TARGET_HOME}/anthonyware/configs"
+elif [[ -d "/root/anthonyware-setup/anthonyware/configs" ]]; then
+  CONFIG_SRC="/root/anthonyware-setup/anthonyware/configs"
+else
+  echo "ERROR: Cannot find anthonyware configs directory"
+  echo "Searched:"
+  echo "  - ${REPO_PATH:-REPO_PATH not set}/configs"
+  echo "  - ${TARGET_HOME}/anthonyware/configs"
+  echo "  - /root/anthonyware-setup/anthonyware/configs"
+  exit 1
+fi
+
+echo "[user-configs] Using config source: ${CONFIG_SRC}"
 
 # Ensure .config exists
 mkdir -p "${TARGET_HOME}/.config"
@@ -48,9 +69,16 @@ for dir in "${CONFIG_DIRS[@]}"; do
   DEST="${TARGET_HOME}/.config/${dir}"
 
   if [[ -d "${SRC}" ]]; then
-    echo "[user-configs] Copying ${dir} → ${DEST}"
-    mkdir -p "${DEST}"
-    cp -rT "${SRC}" "${DEST}" || { echo "ERROR: Failed to copy ${dir}"; exit 1; }
+    echo "[user-configs] Applying ${dir} → ${DEST}"
+    mkdir -p "${TARGET_HOME}/.config"
+    if command -v overlay_apply_dir >/dev/null 2>&1; then
+      if ! overlay_apply_dir "${SRC}" "${DEST}"; then
+        echo "ERROR: Failed to apply ${dir}"; exit 1;
+      fi
+    else
+      mkdir -p "${DEST}"
+      cp -rT "${SRC}" "${DEST}" || { echo "ERROR: Failed to copy ${dir}"; exit 1; }
+    fi
   else
     echo "[user-configs] WARNING: Missing config directory: ${SRC}"
   fi

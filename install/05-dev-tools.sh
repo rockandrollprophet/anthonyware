@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [05] Development Tools ==="
 
 # Core dev tools
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     base-devel \
     git \
     git-delta \
@@ -41,7 +48,7 @@ sudo pacman -S --noconfirm --needed \
     kate
 
 # Terminal QoL
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     zoxide \
     atuin \
     broot \
@@ -49,8 +56,8 @@ sudo pacman -S --noconfirm --needed \
 
 # Docker setup
 TARGET_USER="${SUDO_USER:-$USER}"
-sudo systemctl enable --now docker
-sudo usermod -aG docker "$TARGET_USER"
+${SUDO} systemctl enable --now docker
+${SUDO} usermod -aG docker "$TARGET_USER"
 
 # Rust toolchain
 rustup default stable

@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [18] Networking Tools ==="
 
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     iperf3 \
     nmap \
     tcpdump \
@@ -14,6 +21,6 @@ sudo pacman -S --noconfirm --needed \
     openssh \
     rsync
 
-sudo usermod -aG wireshark "$USER"
+${SUDO} usermod -aG wireshark "$USER"
 
 echo "=== Networking Tools Setup Complete ==="

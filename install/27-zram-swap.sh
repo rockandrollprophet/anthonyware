@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [27] ZRAM Swap Setup ==="
 
-sudo pacman -S --noconfirm --needed zram-generator
+${SUDO} pacman -S --noconfirm --needed zram-generator
 
-sudo tee /etc/systemd/zram-generator.conf >/dev/null <<EOF
+${SUDO} tee /etc/systemd/zram-generator.conf >/dev/null <<EOF
 [zram0]
 zram-size = ram / 2
 compression-algorithm = zstd

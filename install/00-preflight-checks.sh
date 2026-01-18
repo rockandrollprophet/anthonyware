@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== Preflight Checks ==="
 
 # Check internet
@@ -60,10 +67,10 @@ if grep -q "^
 else
     echo "DISABLED"
     echo "Enabling multilib..."
-    sudo sed -i '/
+    ${SUDO} sed -i '/
 [multilib]
 /,/Include/s/^#//' /etc/pacman.conf
-    sudo pacman -Sy
+    ${SUDO} pacman -Sy
 fi
 
 echo "=== Preflight Checks Complete ==="

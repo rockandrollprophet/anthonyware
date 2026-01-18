@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root or via sudo
+if [[ "${EUID}" -eq 0 ]]; then
+  SUDO=""
+else
+  SUDO="sudo"
+fi
+
 echo "=== [07] CAD / CNC / 3D Printing Stack ==="
 echo "NOTE: SolidWorks, Siemens NX, and other Windows-only CAD tools run in VFIO Windows VM with GPU passthrough."
 echo "      See docs/workflow-cad.md and docs/workflow-vfio.md for VM setup and licensing guidance."
 
 # Core CAD tools (open-source, native)
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     blender \
     kicad \
     freecad \
@@ -35,7 +42,7 @@ else
 fi
 
 # Advanced geometry / computational design
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     python-shapely || echo "WARNING: python-shapely install failed (optional, for scripted CAD)"
 
 # CNC / Laser / Machining tools
@@ -57,7 +64,7 @@ else
 fi
 
 # 3D printing slicers
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     prusa-slicer || echo "WARNING: prusa-slicer install failed"
 
 if command -v yay >/dev/null; then
@@ -69,7 +76,7 @@ else
 fi
 
 # 3D printer ecosystem (OctoPrint, Mainsail, Fluidd, Klipper support)
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     octoprint || echo "WARNING: octoprint install failed"
 
 if command -v yay >/dev/null; then
@@ -81,7 +88,7 @@ else
 fi
 
 # Mesh processing and repair
-sudo pacman -S --noconfirm --needed \
+${SUDO} pacman -S --noconfirm --needed \
     meshlab || echo "WARNING: meshlab install failed"
 
 # Point cloud processing
