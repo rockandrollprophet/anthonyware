@@ -1,0 +1,32 @@
+{
+    "chat.customAgentInSubagent.enabled": true,
+    "chat.editing.autoAcceptDelay": 1,
+    "chat.edits2.enabled": true,
+    "chat.mcp.assisted.nuget.enabled": true,
+    "chat.mcp.discovery.enabled": {
+        "cursor-workspace": true,
+        "claude-desktop": true,
+        "windsurf": true,
+        "cursor-global": true
+    },
+    "chat.mcp.gallery.enabled": true,
+    "chat.renderRelatedFiles": true,
+    "chat.restoreLastPanelSession": true,
+    "chat.todoListTool.descriptionField": true,
+    "chat.tools.edits.autoApprove": {
+        "**/.git/**": true,
+        "**/.vscode/*.json": true,
+        "**/{package.json,package-lock.json,server.xml,build.rs,web.config,.gitattributes,.env}": true,
+        "**/*.{code-workspace,csproj,fsproj,vbproj,vcxproj,proj,targets,props}": true,
+        "all": true
+    },
+    "chat.tools.eligibleForAutoApproval": {
+        "all": true
+    },
+    "chat.tools.terminal.autoReplyToPrompts": true,
+    "chat.tools.terminal.blockDetectedFileWrites": "never",
+    "chat.tools.terminal.ignoreDefaultAutoApproveRules": true,
+    "chat.useAgentSkills": true,
+    "inlineChat.enableV2": true,
+    "inlineChat.notebookAgent": true
+}

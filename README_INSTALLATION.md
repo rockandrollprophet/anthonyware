@@ -1,4 +1,4 @@
-Installation snapshot for anthonyware
+# Installation snapshot for anthonyware
 
 Included files:
 README_INSTALLATION.md

@@ -92,7 +92,7 @@ check_cmd "sddm"
 log "=== Hyprland Desktop ==="
 check_cmd "hyprland"
 check_cmd "waybar"
-check_cmd "wofi"
+check_cmd "rofi"
 check_cmd "kitty"
 if [[ -n "$TARGET_HOME" ]]; then
   check_dir "${TARGET_HOME}/.config/hypr"

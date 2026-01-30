@@ -62,7 +62,7 @@ CONFIG_DIRS=(
   "eww"
   "swaync"
   "mako"
-  "wofi"
+  "rofi"
 )
 
 for dir in "${CONFIG_DIRS[@]}"; do

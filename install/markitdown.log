@@ -1,0 +1,10 @@
+2026-01-29 20:55:44.606 [info] Starting server microsoft/markitdown
+2026-01-29 20:55:44.606 [info] Connection state: Starting
+2026-01-29 20:55:44.607 [info] Starting server from LocalProcess extension host
+2026-01-29 20:55:44.616 [info] Connection state: Starting
+2026-01-29 20:55:44.619 [info] Connection state: Error spawn uvx ENOENT
+2026-01-29 21:23:08.569 [info] Starting server microsoft/markitdown
+2026-01-29 21:23:08.570 [info] Connection state: Starting
+2026-01-29 21:23:08.572 [info] Starting server from LocalProcess extension host
+2026-01-29 21:23:08.578 [info] Connection state: Starting
+2026-01-29 21:23:08.581 [info] Connection state: Error spawn uvx ENOENT

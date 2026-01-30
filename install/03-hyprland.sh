@@ -28,30 +28,31 @@ done
 
 # Core Hyprland packages
 ${SUDO} pacman -S --noconfirm --needed \
-    hyprland \
-    sddm \
-    sddm-kcm \
-    waybar \
-    wofi \
-    kitty \
-    mako \
-    hyprpaper \
-    hyprlock \
-    hypridle \
-    swww \
-    grim \
-    slurp \
-    swappy \
-    wl-clipboard \
-    cliphist \
-    wlogout \
-    polkit-kde-agent \
-    qt5-wayland \
-    qt6-wayland \
-    xdg-desktop-portal-hyprland \
-    xdg-desktop-portal-gtk \
-    wlr-randr \
-    swaync || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
+  hyprland \
+  sddm \
+  sddm-kcm \
+  waybar \
+  rofi \
+  kitty \
+  mako \
+  hyprpaper \
+  hyprlock \
+  hypridle \
+  swww \
+  grim \
+  slurp \
+  swappy \
+  wl-clipboard \
+  cliphist \
+  polkit-kde-agent \
+  qt5-wayland \
+  qt6-wayland \
+  xdg-desktop-portal-hyprland \
+  xdg-desktop-portal-gtk \
+  wlr-randr \
+  swaync || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
+
+# Note: 'wlogout' is not available in the official repos as of 2026. Install from AUR if needed.
 
 # Start polkit agent for authentication dialogs
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${TARGET_HOME}/.config}"
@@ -75,13 +76,14 @@ EOF
 
 # AUR packages (if yay exists)
 if command -v yay >/dev/null; then
-    yay -S --noconfirm --needed \
-        grimblast-git \
-        eww-wayland \
-        hyprpicker \
-        wdisplays || echo "WARNING: Some AUR packages failed to install"
+  yay -S --noconfirm --needed \
+    grimblast-git \
+    eww-wayland \
+    hyprpicker \
+    wdisplays \
+    wlogout || echo "WARNING: Some AUR packages failed to install"
 else
-    echo "NOTICE: 'yay' not found. Install AUR packages manually if desired: grimblast-git eww-wayland hyprpicker wdisplays"
+  echo "NOTICE: 'yay' not found. Install AUR packages manually if desired: grimblast-git eww-wayland hyprpicker wdisplays wlogout"
 fi
 
 # Create config directories using XDG_CONFIG_HOME
