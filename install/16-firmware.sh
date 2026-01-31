@@ -13,8 +13,7 @@ echo "=== [16] Firmware & Microcode ==="
 ${SUDO} pacman -S --noconfirm --needed \
     fwupd \
     linux-firmware \
-    amd-ucode \
-    intel-ucode
+    amd-ucode
 
 ${SUDO} systemctl enable --now fwupd.service
 

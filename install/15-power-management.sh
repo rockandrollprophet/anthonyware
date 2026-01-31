@@ -13,11 +13,23 @@ echo "=== [15] Power Management ==="
 ${SUDO} pacman -S --noconfirm --needed \
     tlp \
     tlp-rdw \
+    thermald \
     powertop \
-    auto-cpufreq \
-    thermald
+    power-profiles-daemon \
+    upower \
+    acpi \
+    acpid \
+    lm_sensors \
+    cpupower \
+    tlpui
+
+# Only install bolt if Thunderbolt hardware is present
+if lsusb | grep -qi thunderbolt; then
+    ${SUDO} pacman -S --noconfirm --needed bolt
+fi
 
 ${SUDO} systemctl enable --now tlp
 ${SUDO} systemctl enable --now thermald
+${SUDO} systemctl enable --now acpid
 
 echo "=== Power Management Setup Complete ==="

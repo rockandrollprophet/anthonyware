@@ -1,4 +1,56 @@
 # 🚀 Anthonyware OS 1.0 — Complete Installation Guide
+---
+## Engineering, Scientific, and CNC Tools: Package Selection
+
+### ✔ KEEP/Add
+
+blender
+sympy (pip)
+kicad
+openscad
+fusion360-bin
+freecad
+candle
+universal-gcode-sender-bin
+bcnc
+openbuilds-control-bin
+lasergrbl-bin
+prusa-slicer
+cura-bin
+lychee-slicer-bin
+octoprint
+mainsail
+fluidd
+meshlab
+cloudcompare
+ngspice
+gerbv
+sigrok-cli
+pulseview
+arduino-cli
+openocd
+avrdude
+dfu-util
+arm-none-eabi-gcc
+arm-none-eabi-gdb
+python-usbtmc
+python-pyvisa
+octave
+octave-control
+octave-signal
+gnuplot
+scpi-tools
+libsigrok
+libsigrokdecode
+python-shapely
+
+### ❌ REMOVE
+
+qucs-s
+geda
+pcb (AUR)
+ltspice (AUR)
+sigrok (AUR)
 
 ## Overview
 
@@ -572,6 +624,7 @@ sudo bash run-all.sh
 - **gtkwave** — Waveform viewer
 - **Arduino CLI** — Microcontroller tools
 
+
 ### System Tools
 
 - **Timeshift** — System snapshots
@@ -582,6 +635,48 @@ sudo bash run-all.sh
 
 ---
 
+## XDG Portals & Wayland Integration
+
+**Installed Packages:**
+- xdg-desktop-portal
+- xdg-desktop-portal-hyprland
+- xdg-desktop-portal-gtk
+- xdg-desktop-portal-qt
+- qt5-wayland
+- qt6-wayland
+
+All packages were installed or confirmed present using `yay --noconfirm --needed`.
+
+**Notes:**
+- Mirrorlist warnings were encountered ("directive 'Server' in section 'options' not recognized"), but these are non-fatal and do not affect package installation. Review your `/etc/pacman.d/mirrorlist` for syntax if desired, but no action is required for successful installs.
+
+**Next Steps:**
+- Proceed to the next group or review additional integration/configuration steps as needed.
+
+---
+
+## Performance Tuning
+## Power Management
+
+**Installed/Enabled:**
+- tlp
+- tlp-rdw
+- thermald
+- powertop
+- power-profiles-daemon
+
+**Removed/Uninstalled:**
+- auto-cpufreq
+- gnome-settings-daemon (not present)
+- gsd-power (not present)
+
+**Services Enabled:**
+- tlp
+- thermald
+
+All changes applied using yay and systemctl. Mirrorlist warnings are non-fatal and can be ignored.
+
+---
 ## Performance Tuning
 
 ### For AI/ML
