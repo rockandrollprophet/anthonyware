@@ -10,16 +10,26 @@ fi
 
 echo "=== [18] Networking Tools ==="
 
+
 ${SUDO} pacman -S --noconfirm --needed \
-    iperf3 \
-    nmap \
-    tcpdump \
-    wireshark-qt \
-    traceroute \
-    bind \
-    net-tools \
-    openssh \
-    rsync
+  iperf3 \
+  nmap \
+  tcpdump \
+  wireshark-qt \
+  traceroute \
+  mtr \
+  ethtool \
+  socat \
+  whois \
+  arp-scan \
+  nftables \
+  curl \
+  httpie \
+  iproute2 \
+  openssh \
+  rsync \
+  bind-tools \
+  openbsd-netcat
 
 ${SUDO} usermod -aG wireshark "$USER"
 

@@ -29,12 +29,9 @@ done
 # Core Hyprland packages
 ${SUDO} pacman -S --noconfirm --needed \
   hyprland \
-  sddm \
-  sddm-kcm \
-  waybar \
+  greetd \
   rofi \
   kitty \
-  mako \
   hyprpaper \
   hyprlock \
   hypridle \
@@ -51,8 +48,6 @@ ${SUDO} pacman -S --noconfirm --needed \
   xdg-desktop-portal-gtk \
   wlr-randr \
   swaync || { echo "ERROR: Failed to install Hyprland packages"; exit 1; }
-
-# Note: 'wlogout' is not available in the official repos as of 2026. Install from AUR if needed.
 
 # Start polkit agent for authentication dialogs
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${TARGET_HOME}/.config}"
@@ -77,14 +72,21 @@ EOF
 # AUR packages (if yay exists)
 if command -v yay >/dev/null; then
   yay -S --noconfirm --needed \
+    greetd-regreet \
     grimblast-git \
-    eww-wayland \
     hyprpicker \
-    wdisplays \
-    wlogout || echo "WARNING: Some AUR packages failed to install"
+    wlogout \
+    nwg-drawer \
+    nwg-bar \
+    nwg-look \
+    nwg-displays \
+    cairo-dock || echo "WARNING: Some AUR packages failed to install"
 else
-  echo "NOTICE: 'yay' not found. Install AUR packages manually if desired: grimblast-git eww-wayland hyprpicker wdisplays wlogout"
+  echo "NOTICE: 'yay' not found. Install AUR packages manually if desired: greetd-regreet grimblast-git hyprpicker wlogout nwg-drawer nwg-bar nwg-look nwg-displays cairo-dock"
 fi
+
+# Enable greetd service
+${SUDO} systemctl enable greetd.service
 
 # Create config directories using XDG_CONFIG_HOME
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${TARGET_HOME}/.config}"
