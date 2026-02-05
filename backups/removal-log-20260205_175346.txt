@@ -1,0 +1,7 @@
+checking dependencies...
+error: failed to prepare transaction (could not satisfy dependencies)
+:: removing xorg-xwayland breaks dependency 'xorg-xwayland' required by hyprland
+:: removing python-gobject breaks dependency 'python-gobject' required by nwg-displays
+:: removing python-pytooling breaks dependency 'python-pytooling' required by python-pyvhdlmodel
+:: removing xdg-desktop-portal breaks dependency 'xdg-desktop-portal' required by xdg-desktop-portal-gtk
+:: removing xdg-desktop-portal breaks dependency 'xdg-desktop-portal' required by xdg-desktop-portal-hyprland
